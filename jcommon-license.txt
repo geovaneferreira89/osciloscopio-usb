@@ -1,0 +1,12 @@
+******************************
+* THE JCOMMON CLASS LIBRARY: *
+******************************
+
+(C)opyright, 2000-2006, by Object Refinery Limited and Contributors.
+
+JCommon is a free general purpose Java class library that is used in
+several projects at www.jfree.org, including JFreeChart and
+JFreeReport.  
+
+JCommon is licensed, free of charge, under the terms of the GNU Lesser
+General Public Licence.  A copy of the licence is included in the download.

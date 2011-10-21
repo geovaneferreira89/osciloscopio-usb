@@ -2,5 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="C:/Users/Henrique/workspace/ScopeOI3/forms-1.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Henrique/workspace/ScopeOI3/jcommon-1.0.16.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Henrique/workspace/ScopeOI3/jfreechart-1.0.13.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Henrique/workspace/ScopeOI3/jguiframework-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Henrique/workspace/ScopeOI3/miglayout15-swing.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
