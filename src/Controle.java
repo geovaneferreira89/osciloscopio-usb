@@ -42,7 +42,9 @@ public class Controle implements Runnable{
 	
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		while(true){
+			
+		}
 		
 	}
 	
@@ -132,7 +134,6 @@ public class Controle implements Runnable{
 	
 	public void atualizaPosCursores(double posicao){
 		double xval = plotter.getPlot().getDomainAxis().java2DToValue(posicao, frameProjeto.getChartPanel().getChartRenderingInfo().getPlotInfo().getDataArea(),plotter.getPlot().getDomainAxisEdge());
-		System.out.println(xval);
 		if(cursor1.isEnable()){
 			cursor1.setPosicao(xval);
 		}

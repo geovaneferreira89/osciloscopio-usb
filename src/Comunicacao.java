@@ -5,7 +5,9 @@ public class Comunicacao implements Runnable{
 	private boolean status;
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+		while(true){
+			
+		}
 		
 	}
 	
