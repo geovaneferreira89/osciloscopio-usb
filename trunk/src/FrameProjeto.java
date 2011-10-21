@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.GridLayout;
-import java.awt.Paint;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -43,7 +42,6 @@ import org.jfree.ui.RectangleInsets;
 
 
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 
 
 
@@ -728,17 +726,4 @@ public class FrameProjeto extends JFrame {
 	public static long elapsedTime() {  
 		return timeDiff;  
 	}
-}
-class Controle{
-	private static boolean trigger;  
-	Plotter p1;
-	public Controle(){
-		p1 = new Plotter();
-	}
-	public Plotter getPlotter(){
-		return p1;
-	}
-}
-class Plotter{
-	
 }
