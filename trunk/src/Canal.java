@@ -12,7 +12,6 @@ public class Canal {
 	
 	private int escalaTensao;
 	public static int escalaTempo;
-	
 	public static double [] seriesEscalaTempo = {1,2,3,4,5,6,7}; //EXEMPLO
 	public static double [] seriesEscalaTensao = {1,2,3,4,5}; // EXEMPLO
 	public static String [] escalaTensaoStr = {"10 mV/div","50 mV/div","250 mV/div","1 V/div","5 V/div"};
