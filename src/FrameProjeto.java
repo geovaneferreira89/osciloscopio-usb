@@ -20,7 +20,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Timer;
 
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
@@ -28,17 +27,6 @@ import javax.swing.border.EtchedBorder;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.AxisLocation;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.CombinedDomainXYPlot;
-import org.jfree.chart.plot.ValueMarker;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.RectangleInsets;
 
 
 import javax.swing.JSeparator;
@@ -54,86 +42,32 @@ public class FrameProjeto extends JFrame {
 		} catch (Exception e) {}
 		FrameProjeto fp = new FrameProjeto();
 		fp.setVisible(true);
-		Controle c = new Controle();
+		
 		
 	}
+	Controle controle;
+
 	private ChartPanel chartPanel;
-	
-	private XYPlot plotter;
-	
-	private int escalaCH1 = 0;
-	private int escalaCH2 = 0;
-	private int escalaTempo = 0;
-	
-	private String [] escalaTensao = {"10 mV/div","100 mV/div","500 mV/div","2.5 V/div","5 V/div"};
-	private String [] escalaTempostr = {"5 us/div", "50 us/div", "0.5 ms/div", "5 ms/div", "50 ms/div", "0.5 s/div", "1 s/div"};  
 	
 	private JLabel lbl_EscalaCH1;
 	private JLabel lbl_EscalaCH2;
 	private JLabel lbl_EscalaBT;
-	private CombinedDomainXYPlot combinedplot;
-	
-	private XYSeries seriesCH1;
-	private XYSeries seriesCH2; 
-	private XYSeriesCollection collection;
-	private XYDataset dataset;
-	
-	private ValueMarker cursor1;
-	private ValueMarker cursor2;
-		
-	private ButtonGroup grupo;
-	private ButtonGroup grupo2;
 	
 	private JRadioButton rdbtn_Cursor1;
 	private JRadioButton rdbtn_Cursor2;
 	
-	private JRadioButton triggerRB;
+	private ButtonGroup grupo;
+	private ButtonGroup grupo2;
 	
-	//variáveis que não existirão;
-	private static long startValue;  
-	private static long stopValue;  
-	private static long timeDiff;
-	
-	public static boolean kk;
+
 	public FrameProjeto() {
 		
-		
-		
-		
-		System.out.println(timeDiff);
 		// Frame Principal
 		setTitle("Oscilosc\u00F3pio ");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100,702);
-
 		
-		// Plotter (Utilizando JFreeChart)
-		seriesCH1 = new XYSeries("Series 1");
-		seriesCH2 = new XYSeries("Series 2");
-		collection = new XYSeriesCollection();
-		
-		dataset = createDataset1();
-        XYItemRenderer renderer = new StandardXYItemRenderer();
-        NumberAxis rangeAxis = new NumberAxis("Tensão");
-        rangeAxis.setAutoRange(false);
-        rangeAxis.setRange(-5, 5);
-        rangeAxis.setAutoTickUnitSelection(false);
-        rangeAxis.centerRange(0);
-        
-        plotter = new XYPlot(dataset, null, rangeAxis, renderer);
-     
-        plotter.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-        
-        NumberAxis domainAxis = new NumberAxis("Tempo");
-        domainAxis.setAutoRange(false);
-        domainAxis.setRange(-5, 5);
-        domainAxis.setAutoTickUnitSelection(false);
-        domainAxis.centerRange(0);
-        
-        combinedplot = new CombinedDomainXYPlot(domainAxis);
-        combinedplot.add(plotter);
-        
-        
+		controle = new Controle(this);
         
 		JPanel contentPane = new JPanel();
 		contentPane.setBackground(UIManager.getColor("Button.background"));
@@ -161,7 +95,7 @@ public class FrameProjeto extends JFrame {
 		contentPane.add(pnl_Plotter);
 		pnl_Plotter.setLayout(null);
 		
-        JFreeChart chart = new JFreeChart("", null, combinedplot, false);
+        JFreeChart chart = new JFreeChart("", null, controle.getCombinedPlot(), false);
 		chartPanel = new ChartPanel(chart);
 
 		chartPanel.setBounds(16, 40, 680, 534);
@@ -181,42 +115,19 @@ public class FrameProjeto extends JFrame {
 		JButton btn_Teste = new JButton("Teste");
 		btn_Teste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(kk);
+				//System.out.println(kk);
 			}
 		});
+		
 		btn_Teste.setBounds(578, 14, 74, 28);
 		pnl_Plotter.add(btn_Teste);
 		btn_Teste.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {		 
-				
-				double valor = 0;
-				double[] x = new double[(int)(10/0.02)+1];
-				double[] y = new double[(int)(10/0.02)+1];
-				double[] x2 = new double[(int)(10/0.02)+1];
-				double[] y2 = new double[(int)(10/0.02)+1];
-				int i = 0;
-			    while(valor <= 10)
-			    {
-		            
-			         // plotter.set_canal("Sinal", x, x2, "Tempo (s)", y, y2, "Tensão (V)");  
 
-					x[i] = valor-5;
-					y[i] = 3*Math.sin(3+valor);
-					
-					x2[i] = valor-5;
-					y2[i] = Math.sin(valor);
-					i = i+1;
-					valor = valor + 0.02;//Numero de amostras
-					   
-			    }
-
-				atualizaDataSet(y,y2,0.02,(int)(10/0.02)+1);
-				
-				
 			}
 		});
-			
+		
 		JPanel pnl_CH1 = new JPanel();
 		pnl_CH1.setBounds(760, 215, 314, 94);
 		contentPane.add(pnl_CH1);
@@ -230,7 +141,7 @@ public class FrameProjeto extends JFrame {
 		JButton btn_CH1_Mais = new JButton("+");
 		btn_CH1_Mais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				setEscalaTensao(1,1);
+				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(1,1));
 			}
 		});
 		btn_CH1_Mais.setBounds(119, 34, 41, 23);
@@ -239,7 +150,7 @@ public class FrameProjeto extends JFrame {
 		JButton btn_CH1_Menos = new JButton("-");
 		btn_CH1_Menos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setEscalaTensao(1,-1);
+				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(1,-1));
 			}
 		});
 		btn_CH1_Menos.setBounds(119, 60, 41, 23);
@@ -295,7 +206,7 @@ public class FrameProjeto extends JFrame {
 		JButton btn_CH2_Menos = new JButton("-");
 		btn_CH2_Menos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setEscalaTensao(2,-1);
+				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(2,-1));
 			}
 		});
 		btn_CH2_Menos.setBounds(121, 55, 41, 23);
@@ -304,7 +215,7 @@ public class FrameProjeto extends JFrame {
 		JButton btn_CH2_Mais = new JButton("+");
 		btn_CH2_Mais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setEscalaTensao(2,1);
+				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(2,1));
 			}
 		});
 		btn_CH2_Mais.setBounds(121, 29, 41, 23);
@@ -351,7 +262,7 @@ public class FrameProjeto extends JFrame {
 		JButton btn_BT_Mais = new JButton("+");
 		btn_BT_Mais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				escalaTempo(1);
+				lbl_EscalaBT.setText(controle.atualizaEscalaTempo(1));
 			}
 		});
 		btn_BT_Mais.setBounds(121, 18, 41, 23);
@@ -360,20 +271,16 @@ public class FrameProjeto extends JFrame {
 		JButton btn_BT_Menos = new JButton("-");
 		btn_BT_Menos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				escalaTempo(-1);
+				lbl_EscalaBT.setText(controle.atualizaEscalaTempo(-1));
 			}
 		});
 		btn_BT_Menos.setBounds(121, 44, 41, 23);
 		panel_BT.add(btn_BT_Menos);
 		
-		lbl_EscalaBT = new JLabel("2 ms / div");
+		lbl_EscalaBT = new JLabel();
 		lbl_EscalaBT.setBounds(56, 35, 55, 14);
 		panel_BT.add(lbl_EscalaBT);
-		/*gridBagLayout.columnWidths = new int[]{0};
-		gridBagLayout.rowHeights = new int[]{0};
-		gridBagLayout.columnWeights = new double[]{Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{Double.MIN_VALUE};*/
-		
+
 		JPanel panel_Cursores = new JPanel();
 		panel_Cursores.setBorder(new TitledBorder(null, "Cursores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_Cursores.setBounds(760, 496, 314, 163);
@@ -384,7 +291,19 @@ public class FrameProjeto extends JFrame {
 		rdbtn_Cursores.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				ativarCursores(rdbtn_Cursores.isSelected());
+				controle.selectCursores((rdbtn_Cursores.isSelected()));
+				if(rdbtn_Cursores.isSelected()){
+					rdbtn_Cursor1.setEnabled(true);
+					rdbtn_Cursor2.setEnabled(true);
+					rdbtn_Cursor1.setSelected(true);
+				}
+				else{
+					rdbtn_Cursor1.setSelected(false);
+					rdbtn_Cursor2.setSelected(false);
+					rdbtn_Cursor1.setEnabled(false);
+					rdbtn_Cursor2.setEnabled(false);
+				}
+				
 			}
 		});
 		chartPanel.addMouseListener(new MouseAdapter() {
@@ -392,7 +311,7 @@ public class FrameProjeto extends JFrame {
 			public void mouseClicked(MouseEvent arg0) {
 				if(rdbtn_Cursores.isSelected())
 				{
-					atualizaCursor(arg0.getX());
+					controle.atualizaPosCursores(arg0.getX());
 				}
 			}
 		});
@@ -400,10 +319,22 @@ public class FrameProjeto extends JFrame {
 		panel_Cursores.add(rdbtn_Cursores);
 		
 		rdbtn_Cursor1 = new JRadioButton("Cursor1");
+		rdbtn_Cursor1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				controle.ativaCursor(1);
+			}
+		});
 		rdbtn_Cursor1.setBounds(47, 17, 63, 23);
 		panel_Cursores.add(rdbtn_Cursor1);
 		
 		rdbtn_Cursor2 = new JRadioButton("Cursor2");
+		rdbtn_Cursor2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				controle.ativaCursor(2);
+			}
+		});
 		rdbtn_Cursor2.setBounds(112, 17, 63, 23);
 		panel_Cursores.add(rdbtn_Cursor2);
 		//Canal 2 selecionado
@@ -432,19 +363,7 @@ public class FrameProjeto extends JFrame {
 			//########################
 		});
 		
-		lbl_EscalaCH1.setText(escalaTensao[escalaCH1]);
-		lbl_EscalaCH2.setText(escalaTensao[escalaCH2]);
-		lbl_EscalaBT.setText(escalaTempostr[escalaTempo]);
-		
-		grupo = new ButtonGroup();
-		grupo.add(rdbtn_Cursor1);
-		grupo.add(rdbtn_Cursor2);
-		rdbtn_Cursor1.setEnabled(false);
-		rdbtn_Cursor2.setEnabled(false);
-		
-
-		
-		
+	
 		JLabel lblCursor = new JLabel("Cursor1");
 		lblCursor.setBounds(6, 39, 46, 14);
 		panel_Cursores.add(lblCursor);
@@ -464,14 +383,6 @@ public class FrameProjeto extends JFrame {
 		JLabel lblTensaoCanal = new JLabel("Tensao Canal 2");
 		lblTensaoCanal.setBounds(6, 91, 74, 14);
 		panel_Cursores.add(lblTensaoCanal);
-		
-		JLabel lblTempo = new JLabel("Tempo");
-		lblTempo.setBounds(6, 125, 74, 14);
-		panel_Cursores.add(lblTempo);
-		
-		JLabel lblNewLabel = new JLabel("0.00 s");
-		lblNewLabel.setBounds(6, 138, 46, 14);
-		panel_Cursores.add(lblNewLabel);
 		
 		JLabel lblV = new JLabel("0.00 V");
 		lblV.setBounds(6, 104, 46, 14);
@@ -500,14 +411,6 @@ public class FrameProjeto extends JFrame {
 		JLabel label_8 = new JLabel("0.00 V");
 		label_8.setBounds(112, 102, 46, 14);
 		panel_Cursores.add(label_8);
-		
-		JLabel label_9 = new JLabel("Tempo");
-		label_9.setBounds(112, 123, 74, 14);
-		panel_Cursores.add(label_9);
-		
-		JLabel label_10 = new JLabel("0.00 s");
-		label_10.setBounds(112, 136, 46, 14);
-		panel_Cursores.add(label_10);
 		
 		JLabel label_11 = new JLabel("Tensao Canal 1");
 		label_11.setBounds(214, 64, 74, 14);
@@ -586,22 +489,12 @@ public class FrameProjeto extends JFrame {
 		radioButton_2.setSelected(true);
 		radioButton_2.setBounds(6, 15, 50, 23);
 		panel_2.add(radioButton_2);
-
-		plotter.clearDomainMarkers();
 		
-		cursor1 = new ValueMarker(0);
-		cursor1.setLabelOffset(new RectangleInsets(50,-30,0,0));
-		cursor1.setLabel("Cursor1");
-
-		cursor2 = new ValueMarker(0);		
-		cursor2.setLabelOffset(new RectangleInsets(50,-30,0,0));
-		cursor2.setLabel("Cursor2");
-		
-		triggerRB = new JRadioButton("On");
+		JRadioButton triggerRB = new JRadioButton("On");
 		triggerRB.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if (triggerRB.isSelected())
+				/*if (arg0..isSelected())
 				{
 					rdbtn_T1.setEnabled(true);
 					rdbtn_T2.setEnabled(true);
@@ -609,121 +502,36 @@ public class FrameProjeto extends JFrame {
 				else{
 					rdbtn_T1.setEnabled(false);
 					rdbtn_T2.setEnabled(false);
-				}
+				}*/
 			}
 			
 		});
+		
+		// Configuração de início
+		grupo = new ButtonGroup();
+		grupo.add(rdbtn_Cursor1);
+		grupo.add(rdbtn_Cursor2);
+		rdbtn_Cursor1.setEnabled(false);
+		rdbtn_Cursor2.setEnabled(false);	
 		triggerRB.setSelected(true);
 		triggerRB.setBounds(6, 15, 50, 23);
 		rdbtn_TCanal2.add(triggerRB);
 		triggerRB.setSelected(false);
 		rdbtn_T1.setEnabled(false);
 		rdbtn_T2.setEnabled(false);
-		grupo.add(rdbtn_T1);
-		grupo.add(rdbtn_T2);
+		grupo2 = new ButtonGroup();
+		grupo2.add(rdbtn_T1);
+		grupo2.add(rdbtn_T2);
+		lbl_EscalaBT.setText(Canal.escalaTempoStr[0]);
+		lbl_EscalaBT.setText(Canal.escalaTempoStr[0]);
+		lbl_EscalaCH1.setText(Canal.escalaTensaoStr[0]);
+		lbl_EscalaCH2.setText(Canal.escalaTensaoStr[0]);
+		
+		controle.startAll();
+		
 	}
-	private XYDataset createDataset1() {
-        // create dataset 1...
-        seriesCH1.clear();
-        seriesCH2.clear();
-        collection.addSeries(seriesCH1);
-        collection.addSeries(seriesCH2);
-        return collection;
+	public ChartPanel getChartPanel(){
+		return chartPanel;
+	}
 
-    }
-	private void atualizaDataSet(double [] dataCH1, double [] dataCH2, double intervaloTempo ,int numAmostras){
-		seriesCH1.clear();
-		seriesCH2.clear();
-
-		double tempo = 0;
-		for(int i = 0 ; i<numAmostras; i++)
-		{
-			seriesCH1.add(tempo-5,dataCH1[i]);
-			seriesCH2.add(tempo-5,dataCH2[i]);
-			tempo += intervaloTempo;
-		}
-		collection.removeAllSeries();
-        collection.addSeries(seriesCH1);
-        collection.addSeries(seriesCH2);
-        plotter.setDataset(collection);
-	}
-	public void conectarUSB(){
-		
-	}
-	public void singleShot(){
-		
-	}
-	public void ativarCanal(int numCanal){
-		
-	}
-	public void setEscalaTensao(int numCanal,int sentido){
-		if (numCanal == 1){
-			
-			if(escalaCH1 ==0 && sentido == -1 ){
-				escalaCH1 = escalaTensao.length;
-			}
-			escalaCH1 = (escalaCH1 + sentido)% escalaTensao.length;
-			lbl_EscalaCH1.setText(escalaTensao[escalaCH1]);
-		}
-		if (numCanal == 2){
-			if(escalaCH2 ==0 && sentido == -1){
-				escalaCH2 = escalaTensao.length;
-			}
-			escalaCH2 = (escalaCH2 + sentido)% escalaTensao.length;
-			lbl_EscalaCH2.setText(escalaTensao[escalaCH2]);
-		}
-	}
-	public void escalaTempo(int sentido){
-		if(escalaTempo ==0 && sentido == -1 ){
-			escalaTempo = escalaTempostr.length;
-		}
-		escalaTempo = (escalaTempo + sentido)% escalaTempostr.length;
-		lbl_EscalaBT.setText(escalaTempostr[escalaTempo]);
-		
-	}
-	public void ativarCursores(boolean cursores){
-		if(cursores)
-		{
-			chartPanel.setHorizontalAxisTrace(true);
-			plotter.addDomainMarker(cursor1);
-			plotter.addDomainMarker(cursor2);
-			rdbtn_Cursor1.setEnabled(true);
-			rdbtn_Cursor2.setEnabled(true);
-			rdbtn_Cursor1.setSelected(true);
-		}
-		else{
-			rdbtn_Cursor1.setSelected(false);
-			rdbtn_Cursor2.setSelected(false);
-			rdbtn_Cursor1.setEnabled(false);
-			rdbtn_Cursor2.setEnabled(false);
-			plotter.clearDomainMarkers();
-			chartPanel.setHorizontalAxisTrace(false);
-		}
-		chartPanel.repaint();
-	}
-	public void atualizaCursor(int x){
-		double xval = plotter.getDomainAxis().java2DToValue(x, chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea(),plotter.getDomainAxisEdge());
-		if(rdbtn_Cursor1.isSelected()){
-			cursor1.setValue(xval);
-		}
-		else if(rdbtn_Cursor2.isSelected()){
-			cursor2.setValue(xval);
-		}
-	}
-	public void desenha(){
-		
-	}
-	//Métodos que não existirão
-	public static void start() {  
-		startValue = System.currentTimeMillis();  
-		stopValue = 0;  
-		timeDiff = 0;  
-	}  
-	public static void stop() {  
-		stopValue = System.currentTimeMillis();  
-		timeDiff = stopValue - startValue;  
-	 }  
-	public static long elapsedTime() {  
-		return timeDiff;  
-	}
 }
