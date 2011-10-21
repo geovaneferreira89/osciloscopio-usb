@@ -436,61 +436,62 @@ public class FrameProjeto extends JFrame {
 		label_16.setBounds(214, 136, 46, 14);
 		panel_Cursores.add(label_16);
 		
-		JPanel rdbtn_TCanal2 = new JPanel();
-		rdbtn_TCanal2.setBorder(new TitledBorder(null, "Trigger", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		rdbtn_TCanal2.setLayout(null);
-		rdbtn_TCanal2.setBounds(760, 97, 207, 107);
-		contentPane.add(rdbtn_TCanal2);
+		JPanel rdbtn_trigger = new JPanel();
+		rdbtn_trigger.setBorder(new TitledBorder(null, "Trigger", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		rdbtn_trigger.setLayout(null);
+		rdbtn_trigger.setBounds(760, 97, 207, 107);
+		contentPane.add(rdbtn_trigger);
 		
 
-	
+		
 		
 		final JRadioButton rdbtn_T1 = new JRadioButton("Canal 1");
 		rdbtn_T1.setSelected(true);
 		rdbtn_T1.setBounds(58, 15, 69, 23);
-		rdbtn_TCanal2.add(rdbtn_T1);
+		rdbtn_trigger.add(rdbtn_T1);
 		
 		final JRadioButton rdbtn_T2 = new JRadioButton("Canal 2");
 		rdbtn_T2.setSelected(true);
 		rdbtn_T2.setBounds(129, 15, 69, 23);
-		rdbtn_TCanal2.add(rdbtn_T2);
+		rdbtn_trigger.add(rdbtn_T2);
 		
 		
 		JLabel lblTensao = new JLabel("Posic\u00E3o");
 		lblTensao.setBounds(10, 60, 46, 14);
-		rdbtn_TCanal2.add(lblTensao);
+		rdbtn_trigger.add(lblTensao);
 		
 		JButton button = new JButton("+");
 		button.setBounds(58, 45, 41, 23);
-		rdbtn_TCanal2.add(button);
+		rdbtn_trigger.add(button);
 		
 		JButton button_1 = new JButton("-");
 		button_1.setBounds(58, 71, 41, 23);
-		rdbtn_TCanal2.add(button_1);
+		rdbtn_trigger.add(button_1);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "SingleShot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setLayout(null);
-		panel_1.setBounds(977, 153, 97, 51);
-		contentPane.add(panel_1);
+		JPanel panel_singleShot = new JPanel();
+		panel_singleShot.setBorder(new TitledBorder(null, "SingleShot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_singleShot.setLayout(null);
+		panel_singleShot.setBounds(977, 153, 97, 51);
+		contentPane.add(panel_singleShot);
 		
 		JRadioButton radioButton_1 = new JRadioButton("On");
 		radioButton_1.setSelected(true);
 		radioButton_1.setBounds(6, 15, 50, 23);
-		panel_1.add(radioButton_1);
+		panel_singleShot.add(radioButton_1);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new TitledBorder(null, "Ant-Aliasing", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_2.setLayout(null);
-		panel_2.setBounds(977, 97, 97, 51);
-		contentPane.add(panel_2);
+		JPanel panel_AntAliasing = new JPanel();
+		panel_AntAliasing.setBorder(new TitledBorder(null, "Ant-Aliasing", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_AntAliasing.setLayout(null);
+		panel_AntAliasing.setBounds(977, 97, 97, 51);
+		contentPane.add(panel_AntAliasing);
 		
 		JRadioButton radioButton_2 = new JRadioButton("On");
 		radioButton_2.setSelected(true);
 		radioButton_2.setBounds(6, 15, 50, 23);
-		panel_2.add(radioButton_2);
+		panel_AntAliasing.add(radioButton_2);
 		
 		JRadioButton triggerRB = new JRadioButton("On");
+		triggerRB.setBounds(6, 15, 50, 23);
 		triggerRB.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -506,22 +507,22 @@ public class FrameProjeto extends JFrame {
 			}
 			
 		});
+		rdbtn_trigger.add(triggerRB);
+		
 		
 		// Configuração de início
 		grupo = new ButtonGroup();
 		grupo.add(rdbtn_Cursor1);
 		grupo.add(rdbtn_Cursor2);
 		rdbtn_Cursor1.setEnabled(false);
-		rdbtn_Cursor2.setEnabled(false);	
-		triggerRB.setSelected(true);
-		triggerRB.setBounds(6, 15, 50, 23);
-		rdbtn_TCanal2.add(triggerRB);
-		triggerRB.setSelected(false);
-		rdbtn_T1.setEnabled(false);
-		rdbtn_T2.setEnabled(false);
+		rdbtn_Cursor2.setEnabled(false);
 		grupo2 = new ButtonGroup();
 		grupo2.add(rdbtn_T1);
 		grupo2.add(rdbtn_T2);
+		rdbtn_T1.setEnabled(false);
+		rdbtn_T2.setEnabled(false);
+		triggerRB.setSelected(false);
+
 		lbl_EscalaBT.setText(Canal.escalaTempoStr[0]);
 		lbl_EscalaBT.setText(Canal.escalaTempoStr[0]);
 		lbl_EscalaCH1.setText(Canal.escalaTensaoStr[0]);

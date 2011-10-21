@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="jfreechart-1.0.13.jar"/>
 	<classpathentry kind="lib" path="jguiframework-1.0.jar"/>
 	<classpathentry kind="lib" path="miglayout15-swing.jar"/>
+	<classpathentry kind="lib" path="ch.ntb.usb-0.5.9.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
