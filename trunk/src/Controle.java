@@ -30,6 +30,7 @@ public class Controle implements Runnable{
 		cursor2 = new Cursor(2);
 		plotter = new Plotter(this);
 	}
+	
 	public void startAll(){
 		Thread t  = new Thread(plotter);
 		t.start();

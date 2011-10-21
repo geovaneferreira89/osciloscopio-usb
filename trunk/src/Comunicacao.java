@@ -8,12 +8,15 @@ public class Comunicacao implements Runnable{
 		// TODO Auto-generated method stub
 		
 	}
+	
 	public byte[] read(){
 		return null;
 	}
+	
 	public void write(byte [] b){
 		
 	}
+	
 	public boolean getStatus(){
 		return status;
 	}

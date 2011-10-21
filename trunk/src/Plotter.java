@@ -56,12 +56,15 @@ public class Plotter implements Runnable{
 
 		}
 	}
+	
 	private void atualizaGrafico(){
 		
 	}
+	
 	public XYPlot getPlot(){
 		return plot;
 	}
+	
 	public CombinedDomainXYPlot getCombinedPlot(){
 		return combinedPlot;
 	}
