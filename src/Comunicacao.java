@@ -1,8 +1,10 @@
+import ch.ntb.usb.*;
+
 public class Comunicacao implements Runnable{
 	
 	private byte[] input;
 	private byte[] output;
-	private boolean status;
+	private boolean status;	
 	@Override
 	public void run() {
 		while(true){
@@ -14,7 +16,7 @@ public class Comunicacao implements Runnable{
 	public byte[] read(){
 		return null;
 	}
-	
+
 	public void write(byte [] b){
 		
 	}
