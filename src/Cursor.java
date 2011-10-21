@@ -12,21 +12,27 @@ public class Cursor{
 		marker.setLabel("Cursor" + numCursor);
 		ativo = false;
 	}
+	
 	public void setPosicao(double posicao){
 		marker.setValue(posicao);
 	}
+	
 	public double getPosicao(){
 		return marker.getValue();
 	}
+	
 	public double[] getDados(Canal ch1, Canal ch2){
 		return null;
 	}
+	
 	public void select (boolean ativo){
 		this.selecionado = ativo;
 	}
+	
 	public boolean isEnable(){
 		return selecionado;
 	}
+	
 	public ValueMarker getValueMarker(){
 		return marker;
 	}

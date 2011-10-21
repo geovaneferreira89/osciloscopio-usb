@@ -23,6 +23,7 @@ public class Canal {
 		escalaTempo = 0;
 		escalaTensao = 0;
 	}
+	
 	public void atualizaDataSet(double [] data){
 		/*seriesCH1.clear();
 		seriesCH2.clear();
@@ -40,6 +41,7 @@ public class Canal {
         plotter.setDataset(collection);*/
         
 	}
+	
 	public XYSeries getSeries(){
 		return seriesCH;
 	}
@@ -50,30 +52,39 @@ public class Canal {
 	public double getEscalaTensaoDouble(){
 		return seriesEscalaTensao[escalaTensao];
 	}
+	
 	public int getEscalaTensao(){
 		return escalaTensao;
 	}
+	
 	public double getEscalaTempo(){
 		return seriesEscalaTempo[escalaTempo];
 	}
+	
 	public void setEscalaTempo(int escalaTempo){
 		this.escalaTempo = escalaTempo;
 	}
+	
 	public void setEscalaTensao(int escalaTensao){
 		this.escalaTensao = escalaTensao;
 	}
+	
 	public double calcTensaoRMS(){
 		return 0;
 	}
+	
 	public double calcTensaoPP(){
 		return 0;
 	}
+	
 	public double calcFrequencia(){
 		return 0;
 	}
+	
 	public void select(boolean ativo){
 		this.ativo = ativo;
 	}
+	
 	public boolean isEnable(){
 		return ativo;
 	}
