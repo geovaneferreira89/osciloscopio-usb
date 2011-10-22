@@ -50,5 +50,5 @@ public class SAD extends Thread{
 		this.valor = valor;
 	}
 	
-
+	
 }
