@@ -10,14 +10,14 @@ public class GeradorDeFuncoes extends Thread {
 	private int frequencia;
 	private double valor;
 	private double amplitude;
-	
+	private double time;
 	public GeradorDeFuncoes(){
-		setEstado(GeradorDeFuncoes.SENOIDE);
+		time = 0;
+		estado = GeradorDeFuncoes.SENOIDE;
 		frequencia = 1;
 		amplitude = 0;
-		this.start();
 	}
-	public double getValor(long time){
+	public double getValor(double time){
 		switch(getEstado()){
 			case GeradorDeFuncoes.QUADRADA:
 				return getValorQuadrada(time);
@@ -29,23 +29,42 @@ public class GeradorDeFuncoes extends Thread {
 		return 0;
 		
 	}
-	private double getValorSenoide(long time) {
+	private double getValorSenoide(double time) {
 		double valor = 0;
 		valor = amplitude*Math.sin(2*Math.PI*frequencia*time);
 		return valor;
 	}
-	private double getValorTriangular(long time) {
+	private double getValorTriangular(double time) {
 		double valor = 0;
 		return 0;
 	}
-	private double getValorQuadrada(long time) {
-		// TODO Auto-generated method stub
-		return 0;
+	private double getValorQuadrada(double time) {
+		if (  amplitude*Math.sin(2*Math.PI*frequencia*time) > 0){
+			valor = amplitude;
+		}else
+			valor = 0;
+		return valor;
 	}
+	
+	@Override
 	public void run(){
-		this.setValor(getValor(System.currentTimeMillis()/1000));
-		
+		long timeElapsed = 0;
+		long startTime  = System.currentTimeMillis();
+		while(true){
+			  timeElapsed = System.currentTimeMillis()- startTime;
+			  startTime = System.currentTimeMillis();
+			  time += 0.001;
+				setValor(getValor(time/1000.0));
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					
+					e.printStackTrace();
+				}
+		}
 	}
+	
 	public int getFrequencia() {
 		return frequencia;
 	}
@@ -62,7 +81,7 @@ public class GeradorDeFuncoes extends Thread {
 		return amplitude;
 	}
 	public void setAmplitude(double amplitude) {
-		amplitude = amplitude;
+		this.amplitude = amplitude;
 	}
 	public int getEstado() {
 		return estado;

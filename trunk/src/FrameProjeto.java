@@ -55,15 +55,12 @@ public class FrameProjeto extends JFrame {
 		FrameProjeto fp = new FrameProjeto();
 		fp.setVisible(true);
 		GeradorDeFuncoes g1 = new GeradorDeFuncoes();
+		g1.start();
+		microControlador m1 = new microControlador(g1);
+		m1.start();
+		g1.setEstado(GeradorDeFuncoes.QUADRADA);
 		g1.setAmplitude(10);
-		g1.setFrequencia(1000);
-		g1.setEstado(GeradorDeFuncoes.SENOIDE);
-		
-		while(true){
-			System.out.println(g1.getValor());
-		}
-		
-		
+		g1.setFrequencia(100);
 		
 	}
 	Controle controle;
