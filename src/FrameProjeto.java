@@ -42,6 +42,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JSpinner;
 import java.awt.Component;
 
+import Testes.*;
 
 
 @SuppressWarnings("serial")
@@ -53,6 +54,15 @@ public class FrameProjeto extends JFrame {
 		} catch (Exception e) {}
 		FrameProjeto fp = new FrameProjeto();
 		fp.setVisible(true);
+		GeradorDeFuncoes g1 = new GeradorDeFuncoes();
+		g1.setAmplitude(10);
+		g1.setFrequencia(1000);
+		g1.setEstado(GeradorDeFuncoes.SENOIDE);
+		
+		while(true){
+			System.out.println(g1.getValor());
+		}
+		
 		
 		
 	}
