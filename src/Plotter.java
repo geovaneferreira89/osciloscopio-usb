@@ -9,7 +9,6 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.RectangleInsets;
 
 public class Plotter implements Runnable{
 
