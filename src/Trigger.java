@@ -1,3 +1,6 @@
+import java.awt.Color;
+import java.awt.GradientPaint;
+
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.ui.RectangleInsets;
 
@@ -8,8 +11,10 @@ public class Trigger{
 	private Canal ch;
 	
 	public Trigger(boolean ativo){
+		
 		marker = new ValueMarker(0);
 		marker.setLabelOffset(new RectangleInsets(0,20,0,0));
+		marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.green, 3.0f, 4.0f, Color.green));
 		marker.setLabel("Trigger");
 		this.ativo = ativo;
 	}

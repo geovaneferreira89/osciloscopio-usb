@@ -112,7 +112,9 @@ public class FrameProjeto extends JFrame {
 		final JLabel lbl_EscalaBT = new JLabel();
 		JLabel lblEscala = new JLabel("Escala");
 		JLabel lblCursor = new JLabel("Cursor1");
+		lblCursor.setForeground(Color.BLUE);
 		JLabel lblCursor_1 = new JLabel("Cursor2");
+		lblCursor_1.setForeground(Color.RED);
 		JLabel lblCursorCursor = new JLabel("Cursor2 - Cursor1");
 		JLabel lblCanal = new JLabel("Tensao Canal 1");
 		JLabel lblTensaoCanal = new JLabel("Tensao Canal 2");
@@ -142,6 +144,7 @@ public class FrameProjeto extends JFrame {
 		final JRadioButton rdbtn_SingleShot = new JRadioButton("On");
 		final JRadioButton rdbtn_AntAliasing = new JRadioButton("On");
 		final JRadioButton rdbtn_Trigger = new JRadioButton("On");
+		rdbtn_Trigger.setForeground(Color.BLACK);
 		
 		rdbtn_T2.addMouseListener(new MouseAdapter() {
 			@Override
@@ -170,6 +173,7 @@ public class FrameProjeto extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				controle.setAntAliasing(rdbtn_AntAliasing.isSelected());
+				controle.warnEmb();
 			}
 		});
 		
@@ -183,10 +187,6 @@ public class FrameProjeto extends JFrame {
 		contentPane.add(pnl_Opcoes);
 		pnl_Opcoes.setLayout(null);
 		
-		btn_ConectarUSB.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
 		btn_ConectarUSB.setBounds(17, 25, 107, 29);
 		pnl_Opcoes.add(btn_ConectarUSB);
 		
@@ -240,6 +240,7 @@ public class FrameProjeto extends JFrame {
 		btn_CH1_Mais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(1,1));
+				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
 		btn_CH1_Mais.setBounds(119, 34, 41, 23);
@@ -248,6 +249,7 @@ public class FrameProjeto extends JFrame {
 		btn_CH1_Menos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(1,-1));
+				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
 		btn_CH1_Menos.setBounds(119, 60, 41, 23);
@@ -292,6 +294,7 @@ public class FrameProjeto extends JFrame {
 		btn_CH2_Menos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(2,-1));
+				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
 		btn_CH2_Menos.setBounds(121, 55, 41, 23);
@@ -300,6 +303,7 @@ public class FrameProjeto extends JFrame {
 		btn_CH2_Mais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(2,1));
+				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
 		btn_CH2_Mais.setBounds(121, 29, 41, 23);
@@ -365,7 +369,7 @@ public class FrameProjeto extends JFrame {
 				controle.ativaCursor(1);
 			}
 		});
-		rdbtn_Cursor1.setBounds(47, 17, 63, 23);
+		rdbtn_Cursor1.setBounds(58, 17, 73, 23);
 		panel_Cursores.add(rdbtn_Cursor1);
 		
 
@@ -375,7 +379,7 @@ public class FrameProjeto extends JFrame {
 				controle.ativaCursor(2);
 			}
 		});
-		rdbtn_Cursor2.setBounds(112, 17, 63, 23);
+		rdbtn_Cursor2.setBounds(133, 17, 86, 23);
 		panel_Cursores.add(rdbtn_Cursor2);
 		
 
@@ -412,13 +416,13 @@ public class FrameProjeto extends JFrame {
 		rdbtn_CH2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-					
+				controle.setCanal(2, rdbtn_CH1.isSelected());
 			}
 		});
 		rdbtn_CH1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
+				controle.setCanal(1, rdbtn_CH1.isSelected());
 			}
 		});
 		btn_ConectarUSB.addMouseListener(new MouseAdapter() {
@@ -441,31 +445,31 @@ public class FrameProjeto extends JFrame {
 		lblCursorCursor.setBounds(214, 39, 94, 14);
 		panel_Cursores.add(lblCursorCursor);
 		
-		lblCanal.setBounds(6, 66, 74, 14);
+		lblCanal.setBounds(6, 51, 74, 14);
 		panel_Cursores.add(lblCanal);
 		
-		lblTensaoCanal.setBounds(6, 91, 74, 14);
+		lblTensaoCanal.setBounds(6, 76, 74, 14);
 		panel_Cursores.add(lblTensaoCanal);
 		
-		lblV.setBounds(6, 104, 46, 14);
+		lblV.setBounds(6, 89, 46, 14);
 		panel_Cursores.add(lblV);
 		
-		label_4.setBounds(6, 79, 46, 14);
+		label_4.setBounds(6, 64, 46, 14);
 		panel_Cursores.add(label_4);
 		
 		separator.setBounds(112, 66, 1, 2);
 		panel_Cursores.add(separator);
 		
-		label_5.setBounds(112, 64, 74, 14);
+		label_5.setBounds(111, 51, 74, 14);
 		panel_Cursores.add(label_5);
 		
-		label_6.setBounds(112, 77, 46, 14);
+		label_6.setBounds(111, 64, 46, 14);
 		panel_Cursores.add(label_6);
 		
-		label_7.setBounds(112, 89, 74, 14);
+		label_7.setBounds(111, 76, 74, 14);
 		panel_Cursores.add(label_7);
 		
-		label_8.setBounds(112, 102, 46, 14);
+		label_8.setBounds(111, 89, 46, 14);
 		panel_Cursores.add(label_8);
 		
 		label_11.setBounds(214, 64, 74, 14);
