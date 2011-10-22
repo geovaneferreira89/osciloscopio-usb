@@ -8,7 +8,11 @@ public class Comunicacao implements Runnable{
 	@Override
 	public void run() {
 		while(true){
-			
+			try{ 
+	            Thread.sleep(10);
+	         } catch( InterruptedException e ) {
+	             System.out.println("Interrupted Exception caught");
+	         }
 		}
 		
 	}
