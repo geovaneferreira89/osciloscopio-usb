@@ -20,6 +20,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
@@ -38,6 +39,8 @@ import javax.swing.JTextField;
 import javax.swing.JFormattedTextField;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JSpinner;
+import java.awt.Component;
 
 
 
@@ -89,7 +92,6 @@ public class FrameProjeto extends JFrame {
 		JButton btn_BT_Mais = new JButton("+");
 		JButton btn_BT_Menos = new JButton("-");
 		JButton btn_CH2_Mais = new JButton("+");
-		JButton btn_trigger = new JButton("OK");
 		
 		//Labels
 		JLabel lbl_UsbStatus = new JLabel("USB: N\u00E3o Conectada");
@@ -183,7 +185,7 @@ public class FrameProjeto extends JFrame {
 		contentPane.setLayout(null);
 	
 		pnl_Opcoes.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Op\u00E7\u00F5es ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnl_Opcoes.setBounds(760, 8, 314, 78);
+		pnl_Opcoes.setBounds(760, 8, 314, 91);
 		contentPane.add(pnl_Opcoes);
 		pnl_Opcoes.setLayout(null);
 		
@@ -492,7 +494,7 @@ public class FrameProjeto extends JFrame {
 		
 		pnl_trigger.setBorder(new TitledBorder(null, "Trigger", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_trigger.setLayout(null);
-		pnl_trigger.setBounds(760, 97, 229, 107);
+		pnl_trigger.setBounds(760, 110, 229, 94);
 		contentPane.add(pnl_trigger);
 	
 		rdbtn_T1.setSelected(true);
@@ -509,17 +511,17 @@ public class FrameProjeto extends JFrame {
 		
 		panel_singleShot.setBorder(new TitledBorder(null, "SingleShot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_singleShot.setLayout(null);
-		panel_singleShot.setBounds(999, 153, 75, 51);
+		panel_singleShot.setBounds(999, 163, 75, 41);
 		contentPane.add(panel_singleShot);
 		
 
 		rdbtn_SingleShot.setSelected(true);
-		rdbtn_SingleShot.setBounds(6, 15, 50, 23);
+		rdbtn_SingleShot.setBounds(6, 18, 50, 16);
 		panel_singleShot.add(rdbtn_SingleShot);
 		
 		panel_AntAliasing.setBorder(new TitledBorder(null, "Ant-Aliasing", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_AntAliasing.setLayout(null);
-		panel_AntAliasing.setBounds(999, 97, 75, 51);
+		panel_AntAliasing.setBounds(999, 111, 75, 41);
 		contentPane.add(panel_AntAliasing);
 		
 
@@ -559,24 +561,25 @@ public class FrameProjeto extends JFrame {
 				{
 					arg0.setKeyChar(',');
 				}
+
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					if(rdbtn_Trigger.isSelected()){
+						double posicao = Double.parseDouble(ftf_Trigger.getText().replace(',', '.'));
+						if(posicao>-5 && posicao<5){
+							controle.atualizaPosTrigger(posicao);
+						}	
+					}
+				}
 			}
 		});
 		
 		
 		ftf_Trigger.setBounds(82, 57, 67, 20);
 		pnl_trigger.add(ftf_Trigger);
-			
-		btn_trigger.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(rdbtn_Trigger.isSelected()){
-					double posicao = Double.parseDouble(ftf_Trigger.getText().replace(',', '.'));
-					if(posicao>-5 && posicao<5){
-						controle.atualizaPosTrigger(posicao);
-					}	
-				}
-			}
-		});
 		
 		
 		// Configuração de início
@@ -591,8 +594,31 @@ public class FrameProjeto extends JFrame {
 		rdbtn_T1.setEnabled(false);
 		rdbtn_T2.setEnabled(false);
 		rdbtn_Trigger.setSelected(false);
-		btn_trigger.setBounds(159, 53, 60, 29);
-		pnl_trigger.add(btn_trigger);
+		
+		JButton button = new JButton("+");
+		final DecimalFormat aproximador = new DecimalFormat( " 0.00 " );
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				controle.atualizaPosTrigger(1);
+				
+				ftf_Trigger.setText("" + aproximador.format(controle.getTrigger().getPosicao()));
+			}
+		});
+		button.setAlignmentY(Component.TOP_ALIGNMENT);
+		button.setBounds(150, 54, 40, 14);
+		pnl_trigger.add(button);
+		
+		JButton button_1 = new JButton("-");
+		button_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				controle.atualizaPosTrigger(-1);
+				ftf_Trigger.setText("" + aproximador.format(controle.getTrigger().getPosicao()));
+			}
+		});
+		button_1.setBounds(150, 67, 40, 14);
+		pnl_trigger.add(button_1);
 		
 
 		lbl_EscalaBT.setText(Canal.escalaTempoStr[0]);

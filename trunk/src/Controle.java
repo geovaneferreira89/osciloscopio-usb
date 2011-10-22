@@ -81,7 +81,17 @@ public class Controle implements Runnable{
 		plotter.configRangeMarker();
 		frameProjeto.getChartPanel().repaint();
 	}
-	
+	public void atualizaPosTrigger(int sentido){
+		double temp = trigger.getPosicao()+sentido*(0.02);
+		if(temp<5 && temp>-5){
+			trigger.setPosicao(trigger.getPosicao()+sentido*(0.02));
+			plotter.clearRangeMarker();
+			plotter.addRangeMarker(trigger.getValueMarker());
+			plotter.configRangeMarker();
+			frameProjeto.getChartPanel().repaint();
+		}
+		
+	}
 	public void selectCanalTrigger(int numCanal){
 		if(numCanal == 1){
 			trigger.config(ch1);
