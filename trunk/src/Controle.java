@@ -23,7 +23,7 @@ public class Controle implements Runnable{
 		plotter = new Plotter(this);
 		comunicacao = new Comunicacao();
 		protCom = new ProtocoloComunicacao();
-		trigger = new Trigger();
+		trigger = new Trigger(false);
 		ch1 = new Canal(1);
 		ch2 = new Canal(2);
 		cursor1 = new Cursor(1);
@@ -43,7 +43,11 @@ public class Controle implements Runnable{
 	@Override
 	public void run() {
 		while(true){
-			
+			try{ 
+	            Thread.sleep(10);
+	         } catch( InterruptedException e ) {
+	             System.out.println("Interrupted Exception caught");
+	         }
 		}
 		
 	}
@@ -57,12 +61,32 @@ public class Controle implements Runnable{
 		changed = true;
 	}
 	
-	public void setTrigger(int numCanal, double tensao){
-		
+	
+	public void selectTrigger(boolean t){
+		trigger.select(t);
+		if(t){
+			plotter.getPlot().addRangeMarker(trigger.getValueMarker());
+		}
+		else{
+			plotter.getPlot().clearRangeMarkers();
+		}
+		frameProjeto.getChartPanel().repaint();
 	}
 	
-	public void disableTrigger(){
-		
+	public void atualizaPosTrigger(double posicao){
+		trigger.setPosicao(posicao);
+		plotter.getPlot().clearRangeMarkers();
+		plotter.getPlot().addRangeMarker(trigger.getValueMarker());
+		frameProjeto.getChartPanel().repaint();
+	}
+	
+	public void selectCanalTrigger(int numCanal){
+		if(numCanal == 1){
+			trigger.config(ch1);
+		}
+		if(numCanal == 2){
+			trigger.config(ch2);
+		}
 	}
 	
 	public void setCanal(int numCanal, boolean ativo){
@@ -148,11 +172,11 @@ public class Controle implements Runnable{
 	}
 	
 	public void setSingleShot(boolean ativo){
-		
+		singleShot = ativo;
 	}
 	
 	public void setAntAliasing(boolean ativo){
-		
+		antAliasing = ativo;
 	}
 	
 	public void getSingleShot(){

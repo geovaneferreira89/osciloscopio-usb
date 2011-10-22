@@ -1,20 +1,29 @@
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.ui.RectangleInsets;
+
 public class Trigger{
 	
 	private boolean ativo;
-	private double tensao;
+	private ValueMarker marker;
 	private Canal ch;
 	
-	public void Trigger(boolean ativo){
+	public Trigger(boolean ativo){
+		marker = new ValueMarker(0);
+		marker.setLabelOffset(new RectangleInsets(0,20,0,0));
+		marker.setLabel("Trigger");
 		this.ativo = ativo;
 	}
 	
-	public void config(double tensao, Canal ch){
-		this.tensao = tensao;
+	public void config(Canal ch){
 		this.ch = ch;
 	}
 	
-	public double getTensao(){
-		return tensao;
+	public void setPosicao(double posicao){
+		marker.setValue(posicao);
+	}
+	
+	public double getPosicao(){
+		return marker.getValue();
 	}
 	
 	public void select(boolean ativo){
@@ -23,5 +32,9 @@ public class Trigger{
 	
 	public boolean isEnable(){
 		return ativo;
+	}
+	
+	public ValueMarker getValueMarker(){
+		return marker;
 	}
 }

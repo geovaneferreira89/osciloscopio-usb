@@ -49,7 +49,7 @@ public class Plotter implements Runnable{
 			
 			controle.getFrameProjeto().getChartPanel().repaint();
 	        try{ 
-	            Thread.sleep(1);
+	            Thread.sleep(10);
 	         } catch( InterruptedException e ) {
 	             System.out.println("Interrupted Exception caught");
 	         }
