@@ -3,6 +3,9 @@ import javax.swing.JFrame;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.XYPlot;
 
+import Testes.GeradorDeFuncoes;
+import Testes.microControlador;
+
 public class Controle implements Runnable{
 	private boolean singleShot;
 	private boolean antAliasing;
@@ -18,6 +21,10 @@ public class Controle implements Runnable{
 	private Cursor cursor2;
 	private FrameProjeto frameProjeto;
 	
+	//Objetos teste.
+	private GeradorDeFuncoes g1;
+	private microControlador uc;
+	
 	public Controle(FrameProjeto frame){
 		frameProjeto = frame;
 		plotter = new Plotter(this);
@@ -29,6 +36,13 @@ public class Controle implements Runnable{
 		cursor1 = new Cursor(1);
 		cursor2 = new Cursor(2);
 		plotter = new Plotter(this);
+		
+		//Objetos teste.
+		g1 = new GeradorDeFuncoes();
+		g1.setAmplitude(3.333);
+		g1.setFrequencia(10);
+		g1.setEstado(GeradorDeFuncoes.SENOIDE);
+		uc = new microControlador(g1);
 	}
 	
 	public void startAll(){
@@ -38,18 +52,22 @@ public class Controle implements Runnable{
 		t2.start();
 		Thread t3  = new Thread(this);
 		t3.start();
+		
+		//Nao existira isso.
+		 uc.start();
 	}
 	
 	@Override
 	public void run() {
 		while(true){
-			try{ 
-	            Thread.sleep(10);
-	         } catch( InterruptedException e ) {
-	             System.out.println("Interrupted Exception caught");
-	         }
+				//Aplica o protocolo de comunicacao e verifica se é dado ou outra coisa.
+				//Se for dado : (o teste envolverá somente o canal1):
+				if(uc.getStatus()){
+		        	
+	        		plotter.atualizaDataSetCanais(uc.read(),null);
+					uc.setStatus(false);
+				}
 		}
-		
 	}
 	
 	public void conectarUSB(){
@@ -83,7 +101,7 @@ public class Controle implements Runnable{
 	}
 	public void atualizaPosTrigger(int sentido){
 		double temp = trigger.getPosicao()+sentido*(0.02);
-		if(temp<5 && temp>-5){
+		if(Math.abs(temp)<Plotter.rangePlotter){
 			trigger.setPosicao(trigger.getPosicao()+sentido*(0.02));
 			plotter.clearRangeMarker();
 			plotter.addRangeMarker(trigger.getValueMarker());
