@@ -1,32 +1,58 @@
 package Testes;
 
 public class microControlador extends Thread {
-		private int in[];
-		private int out[];
-		private int valor;
+		private double in[];
+		private double out[];
+		public static final int bufferuC = 30;
+		GeradorDeFuncoes g1;
+		private boolean status; 
+		
 		private SAD sad;
-		public microControlador(GeradorDeFuncoes g){
-			setValor(0);
-			setIn(new int[50]);
-			setOut(new int[50]);
-			sad = new SAD(g);
-			sad.start();
+		
+		public microControlador(GeradorDeFuncoes g1){
+			in = new double[bufferuC];
+			out = new double[bufferuC];
+			status = false;
+			this.g1 = g1;
+			sad = new SAD(g1);
+			//sad.start();
+			
 		}
-		@Override
+		public void startuC(){
+			this.start();
+		}
 		public void run(){
-			int valor = 0;
+			int pos = 0;
+			//int valor = 0;
 			while(true){
-					valor = sad.getValor();
-					System.out.println(valor);
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				if(status == false){
+					//valor = sad.getValor();
+					if(g1.getStatus()){
+		        		in[pos] = g1.getValor();
+						g1.setStatus(false);
+		        		pos ++;
 					}
+					if(pos == bufferuC){
+						status = true;
+						pos = 0;
+					}
+				}
 			}
 		}
-		public int[] getOut() {
+		public double[] read(){
+			return in;
+		}
+		public void setAmostras(double [] amostras){
+			out = amostras;
+		}
+		public boolean getStatus(){
+			return status;
+		}
+		public void setStatus(boolean status){
+			this.status = status;
+		}
+		/*
+		 * 		public int[] getOut() {
 			return out;
 		}
 		public void setOut(int out[]) {
@@ -45,5 +71,6 @@ public class microControlador extends Thread {
 		public void setValor(int valor) {
 			this.valor = valor;
 		}
+		 */
 		
 }
