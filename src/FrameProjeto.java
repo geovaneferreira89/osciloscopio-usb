@@ -54,14 +54,6 @@ public class FrameProjeto extends JFrame {
 		} catch (Exception e) {}
 		FrameProjeto fp = new FrameProjeto();
 		fp.setVisible(true);
-		GeradorDeFuncoes g1 = new GeradorDeFuncoes();
-		g1.start();
-		microControlador m1 = new microControlador(g1);
-		m1.start();
-		g1.setEstado(GeradorDeFuncoes.QUADRADA);
-		g1.setAmplitude(10);
-		g1.setFrequencia(100);
-		
 	}
 	Controle controle;
 
@@ -75,7 +67,7 @@ public class FrameProjeto extends JFrame {
 		setTitle("Oscilosc\u00F3pio ");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(1100,702);
-		
+		setResizable(true);
 		controle = new Controle(this);
         
 		//Paineis
@@ -576,7 +568,7 @@ public class FrameProjeto extends JFrame {
 				{
 					if(rdbtn_Trigger.isSelected()){
 						double posicao = Double.parseDouble(ftf_Trigger.getText().replace(',', '.'));
-						if(posicao>-5 && posicao<5){
+						if(Math.abs(posicao)<Plotter.rangePlotter){
 							controle.atualizaPosTrigger(posicao);
 						}	
 					}
