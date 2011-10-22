@@ -1,10 +1,15 @@
+import java.awt.Color;
+import java.awt.GradientPaint;
+
 import org.jfree.chart.plot.CombinedDomainXYPlot;
+import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.RectangleInsets;
 
 public class Plotter implements Runnable{
 
@@ -35,8 +40,34 @@ public class Plotter implements Runnable{
         
         combinedPlot = new CombinedDomainXYPlot(domainAxis);
         combinedPlot.add(plot);
+        
+        configDomainMarker();
+        configRangeMarker();
 	}
-	
+	public void configDomainMarker(){
+		ValueMarker marker;
+		marker = new ValueMarker(0);
+		marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.black, 4.0f, 4.0f, Color.black));
+		plot.addDomainMarker(marker);
+	}
+	public void configRangeMarker(){
+		ValueMarker marker;
+		marker = new ValueMarker(0);
+		marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.black, 3.0f, 4.0f, Color.black));
+		plot.addRangeMarker(marker);
+	}
+	public void clearDomainMarker(){
+		plot.clearDomainMarkers();
+	}
+	public void clearRangeMarker(){
+		plot.clearRangeMarkers();
+	}
+	public void addDomainMarker(ValueMarker marker){
+		plot.addDomainMarker(marker);
+	}
+	public void addRangeMarker(ValueMarker marker){
+		plot.addRangeMarker(marker);
+	}
 	@Override
 	public void run() {
 		

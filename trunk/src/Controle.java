@@ -65,18 +65,20 @@ public class Controle implements Runnable{
 	public void selectTrigger(boolean t){
 		trigger.select(t);
 		if(t){
-			plotter.getPlot().addRangeMarker(trigger.getValueMarker());
+			plotter.addRangeMarker(trigger.getValueMarker());
 		}
 		else{
-			plotter.getPlot().clearRangeMarkers();
+			plotter.clearRangeMarker();
 		}
+		plotter.configRangeMarker();
 		frameProjeto.getChartPanel().repaint();
 	}
 	
 	public void atualizaPosTrigger(double posicao){
 		trigger.setPosicao(posicao);
-		plotter.getPlot().clearRangeMarkers();
-		plotter.getPlot().addRangeMarker(trigger.getValueMarker());
+		plotter.clearRangeMarker();
+		plotter.addRangeMarker(trigger.getValueMarker());
+		plotter.configRangeMarker();
 		frameProjeto.getChartPanel().repaint();
 	}
 	
@@ -90,7 +92,12 @@ public class Controle implements Runnable{
 	}
 	
 	public void setCanal(int numCanal, boolean ativo){
-		
+		if(numCanal == 1 ){
+			ch1.select(ativo);
+		}
+		else{
+			ch2.select(ativo);
+		}
 	}
 	
 	public String atualizaEscalaTensao(int numCanal, int sentido){
@@ -133,15 +140,16 @@ public class Controle implements Runnable{
 		{
 			cursor1.select(true);
 			cursor2.select(false);
-			plotter.getPlot().addDomainMarker(cursor1.getValueMarker());
-			plotter.getPlot().addDomainMarker(cursor2.getValueMarker());
+			plotter.addDomainMarker(cursor1.getValueMarker());
+			plotter.addDomainMarker(cursor2.getValueMarker());
 			
 		}
 		else{
 			cursor1.select(false);
 			cursor2.select(false);
-			plotter.getPlot().clearDomainMarkers();
+			plotter.clearDomainMarker();
 		}
+		plotter.configDomainMarker();
 		frameProjeto.getChartPanel().repaint();
 	}
 	
@@ -164,9 +172,10 @@ public class Controle implements Runnable{
 		else if(cursor2.isEnable()){
 			cursor2.setPosicao(xval);
 		}
-		plotter.getPlot().clearDomainMarkers();
-		plotter.getPlot().addDomainMarker(cursor1.getValueMarker());
-		plotter.getPlot().addDomainMarker(cursor2.getValueMarker());
+		plotter.clearDomainMarker();
+		plotter.addDomainMarker(cursor1.getValueMarker());
+		plotter.addDomainMarker(cursor2.getValueMarker());
+		plotter.configDomainMarker();
 		frameProjeto.getChartPanel().repaint();
 		
 	}
@@ -179,12 +188,12 @@ public class Controle implements Runnable{
 		antAliasing = ativo;
 	}
 	
-	public void getSingleShot(){
-		
+	public boolean getSingleShot(){
+		return singleShot;
 	}
 	
-	public void getAntAliasing(){
-		
+	public boolean getAntAliasing(){
+		return antAliasing;
 	}
 	
 	public XYPlot getPlot(){
