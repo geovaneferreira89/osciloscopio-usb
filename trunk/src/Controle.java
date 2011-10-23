@@ -23,6 +23,8 @@ public class Controle implements Runnable{
 	private Cursor cursor2;
 	private FrameProjeto frameProjeto;
 	
+	private boolean statusPlotar;
+	
 	//Objetos teste.
 	private GeradorDeFuncoes g1;
 	private microControlador uc;
@@ -40,33 +42,43 @@ public class Controle implements Runnable{
 		
 		singleShot = false;
 		stop = false;
+		statusPlotar = false;
 		
 		//Objetos teste.
-		//g1 = new GeradorDeFuncoes();
-		//g1.setAmplitude(20);
-		//g1.setFrequencia(50);
-		//g1.setEstado(GeradorDeFuncoes.SENOIDE);
-		//uc = new microControlador(g1);
+		g1 = new GeradorDeFuncoes();
+		g1.setAmplitude(20);
+		g1.setFrequencia(50);
+		g1.setEstado(GeradorDeFuncoes.SENOIDE);
+		uc = new microControlador(g1);
+		
 	}
 	
 	public void startAll(){
-		//Thread t  = new Thread(plotter);
-		//t.start();
-		//Thread t2  = new Thread(comunicacao);
-		//t2.start();
-		Thread t3  = new Thread(this);
-		t3.start();
 		
-		 //uc.start();
+		uc.start();
+		Thread t  = new Thread(comunicacao);
+		t.start();
+		Thread t2  = new Thread(this);
+		t2.start();
+		Thread t3 = new Thread(plotter);
+		t3.start();
 	}
 	
 	@Override
 	public void run() {
 		while(true){
-				//Aplica o protocolo de comunicacao e verifica se é dado ou outra coisa.
-				//Se for dado : (o teste envolverá somente o canal1):
-				plotter.atualizaDataSetCanais(null,null);
-				/*synchronized(Monitor.M_C){
+			//Aplica o protocolo de comunicacao e verifica se é dado ou outra coisa.
+			//Se for dado : (o teste envolverá somente o canal1):
+			synchronized(Monitor.C_P){
+				while(!Monitor.C_P.livre){
+					try {
+						Monitor.C_P.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				synchronized(Monitor.M_C){
 					while(Monitor.M_C.livre){
 						try {
 							Monitor.M_C.wait();
@@ -75,15 +87,26 @@ public class Controle implements Runnable{
 							e.printStackTrace();
 						}
 					}
-					if(uc.getStatus()){
-		        		plotter.atualizaDataSetCanais(uc.read(),null);
-						uc.setStatus(false);
+					if(!statusPlotar){
+						if(uc.getStatus()){
+			        		plotter.atualizaDataCanais(uc.read(),null);
+							uc.setStatus(false);
+							statusPlotar = true;
+						}
 					}
-					
 					Monitor.M_C.livre = true;
 					Monitor.M_C.notifyAll();
-				}*/
+				}
+				Monitor.C_P.livre = false;
+				Monitor.C_P.notifyAll();
+			}
 		}
+	}
+	public void setStatusPlotar(boolean sP){
+		statusPlotar = sP;
+	}
+	public boolean getStatusPlotar(){
+		return statusPlotar;
 	}
 	public void conectarUSB(){
 		

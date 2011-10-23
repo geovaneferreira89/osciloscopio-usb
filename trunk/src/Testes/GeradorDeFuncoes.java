@@ -1,5 +1,6 @@
 package Testes;
 
+
 public class GeradorDeFuncoes extends Thread {
 	
 	public static final int QUADRADA = 0;

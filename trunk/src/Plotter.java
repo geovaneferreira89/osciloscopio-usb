@@ -6,11 +6,13 @@ import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.renderer.xy.SamplingXYLineRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import Testes.GeradorDeFuncoes;
+import Testes.Monitor;
 import Testes.microControlador;
 
 public class Plotter implements Runnable{
@@ -24,6 +26,9 @@ public class Plotter implements Runnable{
 	private double posTempoCH2;
 	
 	public static final int rangePlotter = 5;
+	
+	private int [] dataCH1;
+	private int [] dataCH2;
 	
 	public Plotter(Controle c){
 		
@@ -55,9 +60,58 @@ public class Plotter implements Runnable{
         posTempoCH1 = -rangePlotter;
         posTempoCH2 = -rangePlotter;
         
-	    collection.addSeries(controle.getCanal1().getSeries());
-		plot.setDataset(collection);	
+        dataCH1 = new int[microControlador.bufferuC];
+        dataCH2 = new int[microControlador.bufferuC];
         
+	    collection.addSeries(controle.getCanal1().getSeries());
+		plot.setDataset(collection);
+	}
+	public void atualizaDataCanais(int [] dataCH1, int [] dataCH2){
+		this.dataCH1 = dataCH1;
+		this.dataCH2 = dataCH2;
+	}
+	@Override
+	public void run() {
+		while(true){
+			synchronized(Monitor.C_P){
+				while(Monitor.C_P.livre){
+					try {
+						Monitor.C_P.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				if(controle.getStatusPlotar()){
+					atualizaPlotter();
+					controle.setStatusPlotar(false);
+				}
+				Monitor.C_P.livre = true;
+				Monitor.C_P.notifyAll();
+			}
+		}
+	}
+	public void atualizaPlotter(){
+		try{
+			for(int i = 0 ; i < microControlador.bufferuC; i++)
+			{
+				posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
+				if(posTempoCH1 > rangePlotter){
+					posTempoCH1 = -rangePlotter;
+					System.out.println("OI1");
+					controle.getCanal1().getSeries().clear();
+					System.out.println("OI2");
+				}
+			}
+		}
+		catch(java.lang.IndexOutOfBoundsException e){
+			System.out.println("PQP");
+		}
+		catch (java.lang.NullPointerException e ){
+			System.out.println("PQP");
+		}
+		//controle.getFrameProjeto().getChartPanel().repaint();
 	}
 	public void configDomainMarker(){
 		ValueMarker marker;
@@ -82,50 +136,6 @@ public class Plotter implements Runnable{
 	}
 	public void addRangeMarker(ValueMarker marker){
 		plot.addRangeMarker(marker);
-	}
-	@Override
-	public void run() {	
-		while(true){
-			//controle.getFrameProjeto().getChartPanel().repaint();
-	        try{ 
-	            Thread.sleep(10);
-	         } catch( InterruptedException e ) {
-	             System.out.println("Interrupted Exception caught");
-	         }
-		}
-	}
-	public void atualizaDataSetCanais(int [] dataCH1, int [] dataCH2){
-		/*for(int i = 0 ; i < microControlador.bufferuC; i++)
-		{
-			controle.getCanal1().getSeries().add(posTempoCH1,(DDC.converteDigitalDouble(controle.getCanal1(), dataCH1[i])));
-			posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
-			if(posTempoCH1 >= rangePlotter){
-				posTempoCH1 = -rangePlotter;
-				controle.getCanal1().getSeries().clear();
-			}
-			
-		}*/
-		//teste
-		
-		long msBegin = System.currentTimeMillis();
-		for(int i = 0 ; i < 2000000; i++)
-		{
-			try{
-				controle.getCanal1().getSeries().add(posTempoCH1,1);
-			}catch (java.lang.NullPointerException e){
-				System.out.println("PQP");
-			}
-				posTempoCH1 = posTempoCH1 + 0.01;
-				
-				if(posTempoCH1 >= rangePlotter){
-					posTempoCH1 = -rangePlotter;
-					//controle.getFrameProjeto().getChartPanel().repaint();
-					controle.getCanal1().getSeries().clear();
-				}
-
-		}
-		System.out.println(System.currentTimeMillis() - msBegin);
-		System.exit(1);
 	}
 	public XYPlot getPlot(){
 		return plot;

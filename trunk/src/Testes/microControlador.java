@@ -1,5 +1,6 @@
 package Testes;
 
+
 public class microControlador extends Thread {
 		private int in[];
 		private int out[];

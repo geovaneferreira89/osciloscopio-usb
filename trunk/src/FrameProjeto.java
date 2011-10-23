@@ -190,6 +190,7 @@ public class FrameProjeto extends JFrame {
 		pnl_Plotter.setLayout(null);
 		
         JFreeChart chart = new JFreeChart("", null, controle.getCombinedPlot(), false);
+        
 		chartPanel = new ChartPanel(chart);
 
 		chartPanel.setBounds(16, 40, 680, 534);
