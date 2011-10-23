@@ -42,7 +42,6 @@ public class Controle implements Runnable{
 		singleShot = false;
 		stop = false;
 		
-		
 		//Objetos teste.
 		g1 = new GeradorDeFuncoes();
 		g1.setAmplitude(20);
@@ -81,7 +80,6 @@ public class Controle implements Runnable{
 						uc.setStatus(false);
 					}
 					
-					//System.out.println(ch1.getTensaoPP());
 					Monitor.M_C.livre = true;
 					Monitor.M_C.notifyAll();
 				}

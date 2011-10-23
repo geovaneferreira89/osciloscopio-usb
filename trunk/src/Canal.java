@@ -48,12 +48,19 @@ public class Canal {
 		calcTensaoRMS();
 		calcFrequencia();
 	}
+	
 	public void configCanal(boolean amplifica, boolean atenua){
 		
 	}
+	
 	public void selectAntAliasing(boolean antAliasing){
 		this.antAliasing = antAliasing;
 	}
+	
+	public boolean getAntAliasing(){
+		return antAliasing;
+	}
+	
 	public void calcTensaoRMS(){
 	}
 	
