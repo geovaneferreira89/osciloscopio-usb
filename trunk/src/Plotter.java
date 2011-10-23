@@ -89,32 +89,36 @@ public class Plotter implements Runnable{
 			atualizaGrafico();
 			controle.getFrameProjeto().getChartPanel().repaint();
 	        try{ 
-	            Thread.sleep(100);
+	            Thread.sleep(1);
 	         } catch( InterruptedException e ) {
 	             System.out.println("Interrupted Exception caught");
 	         }
 
 		}
 	}
-	public void atualizaDataSetCanais(double [] dataCH1, double [] dataCH2){
+	public void atualizaDataSetCanais(int [] dataCH1, int [] dataCH2){
+		double temp = 0;
 		for(int i = 0 ; i < microControlador.bufferuC; i++)
 		{
-			//isso nao vai ser assim...
-			double mult = 0;
+			temp = Canal.seriesEscalaTensao[controle.getCanal1().getEscalaTensao()];
 			if(controle.getCanal1().getEscalaTensao()<=4){
-				 mult = (0.25)*Canal.seriesEscalaTensao[controle.getCanal1().getEscalaTensao()];
+				 temp = (0.25/4096)*temp;
 			}
-			if(controle.getCanal1().getEscalaTensao()>=6){
-				 mult = (20*3/10)*Canal.seriesEscalaTensao[controle.getCanal1().getEscalaTensao()];
+			
+			else if(controle.getCanal1().getEscalaTensao()>=6){
+				 temp = (12/4096)*temp;
 			}
-			controle.getCanal1().getSeries().add(posTempoCH1,dataCH1[i]*mult);
 			
-			
+			else if (controle.getCanal1().getEscalaTensao()==5){
+				 temp = 1.65*temp/2048.0;
+			}
+			controle.getCanal1().getSeries().add(posTempoCH1,(dataCH1[i]-4096/2)*temp);
 			posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
 			if(posTempoCH1 >= Plotter.rangePlotter){
 				posTempoCH1 = -5;
 				controle.getCanal1().getSeries().clear();
 			}
+			
 		}
 	}
 	private void atualizaGrafico(){

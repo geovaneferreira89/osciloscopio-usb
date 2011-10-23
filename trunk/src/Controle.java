@@ -4,6 +4,7 @@ import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.XYPlot;
 
 import Testes.GeradorDeFuncoes;
+import Testes.Monitor;
 import Testes.microControlador;
 
 public class Controle implements Runnable{
@@ -39,8 +40,8 @@ public class Controle implements Runnable{
 		
 		//Objetos teste.
 		g1 = new GeradorDeFuncoes();
-		g1.setAmplitude(3.333);
-		g1.setFrequencia(10);
+		g1.setAmplitude(1.65);
+		g1.setFrequencia(50);
 		g1.setEstado(GeradorDeFuncoes.SENOIDE);
 		uc = new microControlador(g1);
 	}
@@ -53,7 +54,7 @@ public class Controle implements Runnable{
 		Thread t3  = new Thread(this);
 		t3.start();
 		
-		//Nao existira isso.
+		//Nao existirá isso.
 		 uc.start();
 	}
 	
@@ -62,16 +63,25 @@ public class Controle implements Runnable{
 		while(true){
 				//Aplica o protocolo de comunicacao e verifica se é dado ou outra coisa.
 				//Se for dado : (o teste envolverá somente o canal1):
-				if(uc.getStatus()){
-		        	
-	        		plotter.atualizaDataSetCanais(uc.read(),null);
-					uc.setStatus(false);
+				synchronized(Monitor.M_C){
+					while(Monitor.M_C.livre){
+						try {
+							Monitor.M_C.wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					if(uc.getStatus()){
+		        		plotter.atualizaDataSetCanais(uc.read(),null);
+						uc.setStatus(false);
+					}
+					Monitor.M_C.livre = true;
+					Monitor.M_C.notifyAll();
 				}
 		}
 	}
-	
 	public void conectarUSB(){
-	
 		
 	}
 	
@@ -108,7 +118,6 @@ public class Controle implements Runnable{
 			plotter.configRangeMarker();
 			frameProjeto.getChartPanel().repaint();
 		}
-		
 	}
 	public void selectCanalTrigger(int numCanal){
 		if(numCanal == 1){
@@ -136,6 +145,20 @@ public class Controle implements Runnable{
 			}
 			else{
 				ch1.setEscalaTensao((ch1.getEscalaTensao() + sentido)% Canal.seriesEscalaTensao.length);
+			}
+			
+			//esse metodos vao mudar.
+			if(ch1.getEscalaTensao()<=4){
+				uc.getSAD().setAmplifica(true);
+				uc.getSAD().setAtenua(false);
+			}
+			else if(ch1.getEscalaTensao()>=6){
+				uc.getSAD().setAmplifica(false);
+				uc.getSAD().setAtenua(true);
+			}
+			else{
+				uc.getSAD().setAmplifica(false);
+				uc.getSAD().setAtenua(false);
 			}
 			return Canal.escalaTensaoStr[ch1.getEscalaTensao()];
 		}

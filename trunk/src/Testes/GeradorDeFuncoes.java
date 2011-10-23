@@ -53,15 +53,26 @@ public class GeradorDeFuncoes extends Thread {
 	public void run(){
 		double cont = 0;
 		while(true){
-			if(status == false){
-	        	this.setValor(getValor(cont/frequenciaAmostragem));// 1KHz = frequencia de amostragem
-    			status = true;
-    			cont++;
-	    		try{
-		            Thread.sleep((int)((1/frequenciaAmostragem)*1000));
-		         }catch( InterruptedException e ) {
-		             System.out.println("Interrupted Exception caught");
-		         }
+			synchronized(Monitor.G_S){
+				while(!Monitor.G_S.livre){
+					try {
+						Monitor.G_S.wait();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				if(status == false){
+		        	this.setValor(getValor(cont/frequenciaAmostragem));// 1KHz = frequencia de amostragem
+		        	cont++;
+	    			status = true;
+		    		try{
+			            Thread.sleep((int)((1000.0/frequenciaAmostragem)));
+			         }catch( InterruptedException e ) {
+			             System.out.println("Interrupted Exception caught");
+			         }
+				}
+				Monitor.G_S.livre = false;
+				Monitor.G_S.notifyAll();
 			}
 		}
 	    
