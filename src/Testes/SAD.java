@@ -5,11 +5,15 @@ public class SAD extends Thread{
 	private boolean atenua;
 	private boolean amplifica;
 	private GeradorDeFuncoes g1;
+	private boolean status;
+	
+	
 	
 	public SAD(GeradorDeFuncoes g){
 		atenua = true;
 		amplifica = false;
 		g1 = g;
+		status = false;
 	}
 	public double offset(double valor){
 		return valor+1.65;
@@ -25,30 +29,65 @@ public class SAD extends Thread{
 	}
 	@Override
 	public void run(){
-		while(true){	
-			setValor(sample(g1.getValor()));
+		while(true){
+			synchronized(Monitor.S_M){
+				while(!Monitor.S_M.livre){
+					try {
+						Monitor.S_M.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				synchronized(Monitor.G_S){
+					while(Monitor.G_S.livre){
+						try {
+							Monitor.G_S.wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					if(status==false){
+						if(g1.getStatus()){
+							setValor(sample(g1.getValor()));
+							g1.setStatus(false);
+							status = true;
+						}
+					}
+					Monitor.G_S.livre = true;
+					Monitor.G_S.notifyAll();
+				}
+				Monitor.S_M.livre = false;
+				Monitor.S_M.notifyAll();
+			}
 		}
 	}
 	
 	
-	boolean isAtenua() {
+	public boolean isAtenua() {
 		return atenua;
 	}
-	void setAtenua(boolean atenua) {
+	public void setAtenua(boolean atenua) {
 		this.atenua = atenua;
 	}
-	boolean isAmplifica() {
+	public boolean isAmplifica() {
 		return amplifica;
 	}
-	void setAmplifica(boolean amplifica) {
+	public void setAmplifica(boolean amplifica) {
 		this.amplifica = amplifica;
 	}
-	int getValor() {
+	public int getValor() {
 		return valor;
 	}
-	void setValor(int valor) {
+	public void setValor(int valor) {
 		this.valor = valor;
 	}
-	
+	public boolean getStatus() {
+		return status;
+	}
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
 	
 }
