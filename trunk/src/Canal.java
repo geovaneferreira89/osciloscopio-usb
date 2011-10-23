@@ -1,8 +1,5 @@
 import org.jfree.data.xy.XYSeries;
 
-import Testes.GeradorDeFuncoes;
-import Testes.microControlador;
-
 public class Canal {
 	
 	private XYSeries seriesCH;
@@ -21,29 +18,52 @@ public class Canal {
 	public static String [] escalaTensaoStr = {"10 mV/div","40 mV/div","150 mV/div","400 mV/div","800 mV/div","1.5 V/div","3.5 V/div","5 V/div"};
 	public static String [] escalaTempoStr = {"5 us/div", "50 us/div", "0.5 ms/div", "5 ms/div", "50 ms/div", "0.5 s/div", "1 s/div"};
 
+	// Informam na matrix seriesEscalaTensao e escalaTensaoStr as posições (index) 
+	// onde ocorrem atenuacao/amp no sinal respectivamente:
+	public final static int baixaTensao = 4;
+	public final static int altaTensao = 6;
+	
 	public Canal(int numCanal){
 		seriesCH = new XYSeries("Series "+ numCanal);
 		posTempo = -Plotter.rangePlotter;
 		escalaTempo = 0;
 		escalaTensao = 0;
+		
+		tensaoPP = 0;
+		frequencia = 0;
+		tensaoRMS = 0;
 	}
+	
+	public void atualiza(){
+		calcTensaoPP();
+		calcTensaoRMS();
+		calcFrequencia();
+	}
+	
+	public void calcTensaoRMS(){
+	}
+	
+	public void calcTensaoPP(){
+		tensaoPP = (seriesCH.getMaxY()-seriesCH.getMinY())/(seriesEscalaTensao[escalaTensao]);
+	}
+	
+	public void calcFrequencia(){
+	}
+	
 	public XYSeries getSeries(){
 		return seriesCH;
 	}
+	
 	public double getTensao(double tempo){
 		return 0;
-	}
-
-	public double getEscalaTensaoDouble(){
-		return seriesEscalaTensao[escalaTensao];
-	}
+	}	
 	
 	public int getEscalaTensao(){
 		return escalaTensao;
 	}
 	
-	public double getEscalaTempo(){
-		return seriesEscalaTempo[escalaTempo];
+	public double getTensaoPP(){
+		return tensaoPP;
 	}
 	
 	public void setEscalaTempo(int escalaTempo){
@@ -54,18 +74,6 @@ public class Canal {
 		this.escalaTensao = escalaTensao;
 	}
 	
-	public double calcTensaoRMS(){
-		return 0;
-	}
-	
-	public double calcTensaoPP(){
-		return 0;
-	}
-	
-	public double calcFrequencia(){
-		return 0;
-	}
-	
 	public void select(boolean ativo){
 		this.ativo = ativo;
 	}
@@ -73,6 +81,4 @@ public class Canal {
 	public boolean isEnable(){
 		return ativo;
 	}
-	
-	
 }

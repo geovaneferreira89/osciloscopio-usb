@@ -15,15 +15,11 @@ public class Cursor{
 		
 		marker = new ValueMarker(0);
 		if(numCursor == 2){
-			//ri = new RectangleInsets(80,30,0,0);
 			marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.green, 3.0f, 4.0f, Color.red));
 		}
 		else{
-			//ri = new RectangleInsets(50,-30,0,0);
 			marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.blue, 3.0f, 4.0f, Color.blue));
 		}
-		//marker.setLabelOffset(ri);
-		//marker.setLabel("Cursor" + numCursor);
 		ativo = false;
 	}
 	

@@ -36,8 +36,7 @@ public class Plotter implements Runnable{
         rangeAxis.setRange(-rangePlotter, rangePlotter);
         rangeAxis.setAutoTickUnitSelection(false);
         rangeAxis.centerRange(0);
-        
-        //Verificar o dataset dessa inicialização.
+
         plot = new XYPlot(null, null, rangeAxis, renderer);
         plot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
         
@@ -86,46 +85,27 @@ public class Plotter implements Runnable{
 		plot.setDataset(collection);		
 
 		while(true){
-			atualizaGrafico();
 			controle.getFrameProjeto().getChartPanel().repaint();
 	        try{ 
-	            Thread.sleep(1);
+	            Thread.sleep(10);
 	         } catch( InterruptedException e ) {
 	             System.out.println("Interrupted Exception caught");
 	         }
-
 		}
 	}
 	public void atualizaDataSetCanais(int [] dataCH1, int [] dataCH2){
-		double temp = 0;
 		for(int i = 0 ; i < microControlador.bufferuC; i++)
 		{
-			temp = Canal.seriesEscalaTensao[controle.getCanal1().getEscalaTensao()];
-			if(controle.getCanal1().getEscalaTensao()<=4){
-				 temp = (0.25/4096)*temp;
-			}
-			
-			else if(controle.getCanal1().getEscalaTensao()>=6){
-				 temp = (12/4096)*temp;
-			}
-			
-			else if (controle.getCanal1().getEscalaTensao()==5){
-				 temp = 1.65*temp/2048.0;
-			}
-			controle.getCanal1().getSeries().add(posTempoCH1,(dataCH1[i]-4096/2)*temp);
+			controle.getCanal1().getSeries().add(posTempoCH1,(DDC.converteDigitalDouble(controle.getCanal1(), dataCH1[i])));
 			posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
-			if(posTempoCH1 >= Plotter.rangePlotter){
-				posTempoCH1 = -5;
+			if(posTempoCH1 >= rangePlotter){
+				posTempoCH1 = -rangePlotter;
+				controle.getCanal1().atualiza();
 				controle.getCanal1().getSeries().clear();
 			}
 			
 		}
 	}
-	private void atualizaGrafico(){
-       //collection.addSeries(controle.getCanal1().getSeries());
-		//plot.setDataset(collection);
-	}
-	
 	public XYPlot getPlot(){
 		return plot;
 	}
