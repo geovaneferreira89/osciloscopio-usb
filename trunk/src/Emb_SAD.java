@@ -5,6 +5,7 @@ public class Emb_SAD{
 	public static final double maxTensao2 = 1.65;
 	public static final double maxTensao3 = 20;
 
+	public static final double freq_Amostragem_ADC = 1000000;
 	//Utilizar qndo o protocolo for decidido
 	//public static final int bufferOut_uC = x;
 	

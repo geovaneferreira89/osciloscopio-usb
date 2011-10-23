@@ -569,7 +569,6 @@ public class FrameProjeto extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				controle.atualizaPosTrigger(1);
-				
 				ftf_Trigger.setText("" + aproximador.format(controle.getTrigger().getPosicao()));
 			}
 		});

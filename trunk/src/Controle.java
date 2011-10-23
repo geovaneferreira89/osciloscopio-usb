@@ -29,7 +29,6 @@ public class Controle implements Runnable{
 	
 	public Controle(FrameProjeto frame){
 		frameProjeto = frame;
-		plotter = new Plotter(this);
 		comunicacao = new Comunicacao();
 		protCom = new ProtocoloComunicacao();
 		trigger = new Trigger(false);
@@ -43,22 +42,22 @@ public class Controle implements Runnable{
 		stop = false;
 		
 		//Objetos teste.
-		g1 = new GeradorDeFuncoes();
-		g1.setAmplitude(20);
-		g1.setFrequencia(50);
-		g1.setEstado(GeradorDeFuncoes.SENOIDE);
-		uc = new microControlador(g1);
+		//g1 = new GeradorDeFuncoes();
+		//g1.setAmplitude(20);
+		//g1.setFrequencia(50);
+		//g1.setEstado(GeradorDeFuncoes.SENOIDE);
+		//uc = new microControlador(g1);
 	}
 	
 	public void startAll(){
-		Thread t  = new Thread(plotter);
-		t.start();
-		Thread t2  = new Thread(comunicacao);
-		t2.start();
+		//Thread t  = new Thread(plotter);
+		//t.start();
+		//Thread t2  = new Thread(comunicacao);
+		//t2.start();
 		Thread t3  = new Thread(this);
 		t3.start();
 		
-		 uc.start();
+		 //uc.start();
 	}
 	
 	@Override
@@ -66,7 +65,8 @@ public class Controle implements Runnable{
 		while(true){
 				//Aplica o protocolo de comunicacao e verifica se é dado ou outra coisa.
 				//Se for dado : (o teste envolverá somente o canal1):
-				synchronized(Monitor.M_C){
+				plotter.atualizaDataSetCanais(null,null);
+				/*synchronized(Monitor.M_C){
 					while(Monitor.M_C.livre){
 						try {
 							Monitor.M_C.wait();
@@ -82,7 +82,7 @@ public class Controle implements Runnable{
 					
 					Monitor.M_C.livre = true;
 					Monitor.M_C.notifyAll();
-				}
+				}*/
 		}
 	}
 	public void conectarUSB(){
@@ -114,7 +114,7 @@ public class Controle implements Runnable{
 		frameProjeto.getChartPanel().repaint();
 	}
 	public void atualizaPosTrigger(int sentido){
-		double temp = trigger.getPosicao()+sentido*(Plotter.rangePlotter/250);
+		double temp = trigger.getPosicao()+sentido*(Plotter.rangePlotter/250.0);
 		if(Math.abs(temp)<Plotter.rangePlotter){
 			trigger.setPosicao(temp);
 			plotter.clearRangeMarker();

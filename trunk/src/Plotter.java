@@ -54,6 +54,10 @@ public class Plotter implements Runnable{
         
         posTempoCH1 = -rangePlotter;
         posTempoCH2 = -rangePlotter;
+        
+	    collection.addSeries(controle.getCanal1().getSeries());
+		plot.setDataset(collection);	
+        
 	}
 	public void configDomainMarker(){
 		ValueMarker marker;
@@ -80,12 +84,9 @@ public class Plotter implements Runnable{
 		plot.addRangeMarker(marker);
 	}
 	@Override
-	public void run() {
-	    collection.addSeries(controle.getCanal1().getSeries());
-		plot.setDataset(collection);		
-
+	public void run() {	
 		while(true){
-			controle.getFrameProjeto().getChartPanel().repaint();
+			//controle.getFrameProjeto().getChartPanel().repaint();
 	        try{ 
 	            Thread.sleep(10);
 	         } catch( InterruptedException e ) {
@@ -94,17 +95,37 @@ public class Plotter implements Runnable{
 		}
 	}
 	public void atualizaDataSetCanais(int [] dataCH1, int [] dataCH2){
-		for(int i = 0 ; i < microControlador.bufferuC; i++)
+		/*for(int i = 0 ; i < microControlador.bufferuC; i++)
 		{
 			controle.getCanal1().getSeries().add(posTempoCH1,(DDC.converteDigitalDouble(controle.getCanal1(), dataCH1[i])));
 			posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
 			if(posTempoCH1 >= rangePlotter){
 				posTempoCH1 = -rangePlotter;
-				controle.getCanal1().atualiza();
 				controle.getCanal1().getSeries().clear();
 			}
 			
+		}*/
+		//teste
+		
+		long msBegin = System.currentTimeMillis();
+		for(int i = 0 ; i < 2000000; i++)
+		{
+			try{
+				controle.getCanal1().getSeries().add(posTempoCH1,1);
+			}catch (java.lang.NullPointerException e){
+				System.out.println("PQP");
+			}
+				posTempoCH1 = posTempoCH1 + 0.01;
+				
+				if(posTempoCH1 >= rangePlotter){
+					posTempoCH1 = -rangePlotter;
+					//controle.getFrameProjeto().getChartPanel().repaint();
+					controle.getCanal1().getSeries().clear();
+				}
+
 		}
+		System.out.println(System.currentTimeMillis() - msBegin);
+		System.exit(1);
 	}
 	public XYPlot getPlot(){
 		return plot;
