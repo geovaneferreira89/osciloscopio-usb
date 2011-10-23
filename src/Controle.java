@@ -10,6 +10,7 @@ import Testes.microControlador;
 public class Controle implements Runnable{
 	private boolean singleShot;
 	private boolean antAliasing;
+	
 	private boolean changed;
 	
 	private Plotter plotter;
@@ -40,7 +41,7 @@ public class Controle implements Runnable{
 		
 		//Objetos teste.
 		g1 = new GeradorDeFuncoes();
-		g1.setAmplitude(1.65);
+		g1.setAmplitude(20);
 		g1.setFrequencia(50);
 		g1.setEstado(GeradorDeFuncoes.SENOIDE);
 		uc = new microControlador(g1);
@@ -54,7 +55,6 @@ public class Controle implements Runnable{
 		Thread t3  = new Thread(this);
 		t3.start();
 		
-		//Nao existirá isso.
 		 uc.start();
 	}
 	
@@ -76,6 +76,8 @@ public class Controle implements Runnable{
 		        		plotter.atualizaDataSetCanais(uc.read(),null);
 						uc.setStatus(false);
 					}
+					
+					System.out.println(ch1.getTensaoPP());
 					Monitor.M_C.livre = true;
 					Monitor.M_C.notifyAll();
 				}
@@ -110,9 +112,9 @@ public class Controle implements Runnable{
 		frameProjeto.getChartPanel().repaint();
 	}
 	public void atualizaPosTrigger(int sentido){
-		double temp = trigger.getPosicao()+sentido*(0.02);
+		double temp = trigger.getPosicao()+sentido*(Plotter.rangePlotter/250);
 		if(Math.abs(temp)<Plotter.rangePlotter){
-			trigger.setPosicao(trigger.getPosicao()+sentido*(0.02));
+			trigger.setPosicao(temp);
 			plotter.clearRangeMarker();
 			plotter.addRangeMarker(trigger.getValueMarker());
 			plotter.configRangeMarker();
@@ -147,18 +149,25 @@ public class Controle implements Runnable{
 				ch1.setEscalaTensao((ch1.getEscalaTensao() + sentido)% Canal.seriesEscalaTensao.length);
 			}
 			
-			//esse metodos vao mudar.
-			if(ch1.getEscalaTensao()<=4){
+			//esse metodos vao mudar, na real .
+			if(ch1.getEscalaTensao()<=Canal.baixaTensao){
 				uc.getSAD().setAmplifica(true);
 				uc.getSAD().setAtenua(false);
+				Emb_SAD.amplificaCH1 = true;
+				Emb_SAD.atenuaCH1 = false;
 			}
-			else if(ch1.getEscalaTensao()>=6){
+			else if(ch1.getEscalaTensao()>=Canal.altaTensao){
 				uc.getSAD().setAmplifica(false);
 				uc.getSAD().setAtenua(true);
+				Emb_SAD.amplificaCH1 = false;
+				Emb_SAD.atenuaCH1 = true;
 			}
 			else{
 				uc.getSAD().setAmplifica(false);
 				uc.getSAD().setAtenua(false);
+				Emb_SAD.amplificaCH1 = false;
+				Emb_SAD.atenuaCH1 = false;
+				
 			}
 			return Canal.escalaTensaoStr[ch1.getEscalaTensao()];
 		}

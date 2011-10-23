@@ -626,7 +626,6 @@ public class FrameProjeto extends JFrame {
 		
 		controle.startAll();
 	}
-	
 	public ChartPanel getChartPanel(){
 		return chartPanel;
 	}

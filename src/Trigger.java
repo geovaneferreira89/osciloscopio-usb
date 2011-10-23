@@ -17,6 +17,7 @@ public class Trigger{
 		marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.green, 3.0f, 4.0f, Color.green));
 		marker.setLabel("Trigger");
 		this.ativo = ativo;
+
 	}
 	
 	public void config(Canal ch){
