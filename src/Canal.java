@@ -36,6 +36,11 @@ public class Canal {
 		tensaoPP = 0;
 		frequencia = 0;
 		tensaoRMS = 0;
+		
+		ativo = true;
+		amplifica = false;
+		atenua = true;
+		antAliasing = false;
 	}
 	
 	public void atualiza(){
@@ -43,10 +48,12 @@ public class Canal {
 		calcTensaoRMS();
 		calcFrequencia();
 	}
-	public void configCanal(boolean amplifica, boolean atenua, boolean antAliasing){
+	public void configCanal(boolean amplifica, boolean atenua){
 		
 	}
-	
+	public void selectAntAliasing(boolean antAliasing){
+		this.antAliasing = antAliasing;
+	}
 	public void calcTensaoRMS(){
 	}
 	

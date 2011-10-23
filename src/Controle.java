@@ -9,7 +9,7 @@ import Testes.microControlador;
 
 public class Controle implements Runnable{
 	private boolean singleShot;
-	private boolean antAliasing;
+	private boolean stop;
 	
 	private boolean changed;
 	
@@ -38,6 +38,10 @@ public class Controle implements Runnable{
 		cursor1 = new Cursor(1);
 		cursor2 = new Cursor(2);
 		plotter = new Plotter(this);
+		
+		singleShot = false;
+		stop = false;
+		
 		
 		//Objetos teste.
 		g1 = new GeradorDeFuncoes();
@@ -153,20 +157,17 @@ public class Controle implements Runnable{
 			if(ch1.getEscalaTensao()<=Canal.baixaTensao){
 				uc.getSAD().setAmplifica(true);
 				uc.getSAD().setAtenua(false);
-				Emb_SAD.amplificaCH1 = true;
-				Emb_SAD.atenuaCH1 = false;
+				ch1.configCanal(true, false);
 			}
 			else if(ch1.getEscalaTensao()>=Canal.altaTensao){
 				uc.getSAD().setAmplifica(false);
 				uc.getSAD().setAtenua(true);
-				Emb_SAD.amplificaCH1 = false;
-				Emb_SAD.atenuaCH1 = true;
+				ch1.configCanal(false, true);
 			}
 			else{
 				uc.getSAD().setAmplifica(false);
 				uc.getSAD().setAtenua(false);
-				Emb_SAD.amplificaCH1 = false;
-				Emb_SAD.atenuaCH1 = false;
+				ch1.configCanal(false, false);
 				
 			}
 			return Canal.escalaTensaoStr[ch1.getEscalaTensao()];
@@ -243,17 +244,25 @@ public class Controle implements Runnable{
 	public void setSingleShot(boolean ativo){
 		singleShot = ativo;
 	}
+	public void setStop(boolean ativo){
+		stop = ativo;
+	}
 	
-	public void setAntAliasing(boolean ativo){
-		antAliasing = ativo;
+	public void setAntAliasing(int numCanal , boolean ativo){
+		if(numCanal == 1){
+			ch1.selectAntAliasing(ativo);
+		}
+		else{
+			ch2.selectAntAliasing(ativo);
+		}
 	}
 	
 	public boolean getSingleShot(){
 		return singleShot;
 	}
 	
-	public boolean getAntAliasing(){
-		return antAliasing;
+	public boolean getStop(){
+		return stop;
 	}
 	
 	public XYPlot getPlot(){

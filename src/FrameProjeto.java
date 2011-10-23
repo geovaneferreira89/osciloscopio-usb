@@ -143,6 +143,8 @@ public class FrameProjeto extends JFrame {
 		final JRadioButton rdbtn_T2 = new JRadioButton("Canal 2");
 		final JRadioButton rdbtn_SingleShot = new JRadioButton("On");
 		final JRadioButton rdbtn_Trigger = new JRadioButton("On");
+		final JRadioButton rdbtn_Stop = new JRadioButton("On");
+		
 		rdbtn_Trigger.setForeground(Color.BLACK);
 		
 		rdbtn_T2.addMouseListener(new MouseAdapter() {
@@ -164,6 +166,8 @@ public class FrameProjeto extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				controle.setSingleShot(rdbtn_SingleShot.isSelected());
+				rdbtn_Stop.setSelected(false);
+				controle.setStop(false);
 			}
 		});
 		
@@ -559,20 +563,6 @@ public class FrameProjeto extends JFrame {
 		ftf_Trigger.setBounds(82, 57, 67, 20);
 		pnl_trigger.add(ftf_Trigger);
 		
-		
-		// Configuração de início
-		ButtonGroup grupo = new ButtonGroup();
-		grupo.add(rdbtn_Cursor1);
-		grupo.add(rdbtn_Cursor2);
-		rdbtn_Cursor1.setEnabled(false);
-		rdbtn_Cursor2.setEnabled(false);
-		ButtonGroup grupo2 = new ButtonGroup();
-		grupo2.add(rdbtn_T1);
-		grupo2.add(rdbtn_T2);
-		rdbtn_T1.setEnabled(false);
-		rdbtn_T2.setEnabled(false);
-		rdbtn_Trigger.setSelected(false);
-		
 		JButton button = new JButton("+");
 		final DecimalFormat aproximador = new DecimalFormat( " 0.00 " );
 		button.addMouseListener(new MouseAdapter() {
@@ -609,7 +599,7 @@ public class FrameProjeto extends JFrame {
 		rdbtn_AntAliasingCH1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				controle.setAntAliasing(rdbtn_AntAliasingCH1.isSelected());
+				controle.setAntAliasing(1,rdbtn_AntAliasingCH1.isSelected());
 				controle.warnEmb();
 			}
 		});
@@ -618,7 +608,14 @@ public class FrameProjeto extends JFrame {
 		rdbtn_AntAliasingCH1.setSelected(true);
 		lbl_EscalaCH2.setText(Canal.escalaTensaoStr[0]);
 		
-		JRadioButton rdbtn_AntAliasingCH2 = new JRadioButton("Ant-Aliasing");
+		final JRadioButton rdbtn_AntAliasingCH2 = new JRadioButton("Ant-Aliasing");
+		rdbtn_AntAliasingCH2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				controle.setAntAliasing(2,rdbtn_AntAliasingCH2.isSelected());
+				controle.warnEmb();
+			}
+		});
 		rdbtn_AntAliasingCH2.setSelected(true);
 		rdbtn_AntAliasingCH2.setBounds(49, 18, 100, 23);
 		pnl_CH2.add(rdbtn_AntAliasingCH2);
@@ -629,12 +626,37 @@ public class FrameProjeto extends JFrame {
 		panel.setBounds(999, 142, 75, 41);
 		contentPane.add(panel);
 		
-		JRadioButton radioButton = new JRadioButton("On");
-		radioButton.setSelected(true);
-		radioButton.setBounds(6, 18, 50, 16);
-		panel.add(radioButton);
+		rdbtn_Stop.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				controle.setStop(rdbtn_Stop.isSelected());
+				rdbtn_SingleShot.setSelected(false);
+				controle.setSingleShot(false);
+			}
+		});
+		rdbtn_Stop.setSelected(true);
+		rdbtn_Stop.setBounds(6, 18, 50, 16);
+		panel.add(rdbtn_Stop);
 		
+	    //Configuração de início
+		ButtonGroup grupo = new ButtonGroup();
+		grupo.add(rdbtn_Cursor1);
+		grupo.add(rdbtn_Cursor2);
+		rdbtn_Cursor1.setEnabled(false);
+		rdbtn_Cursor2.setEnabled(false);
+		ButtonGroup grupo2 = new ButtonGroup();
+		grupo2.add(rdbtn_T1);
+		grupo2.add(rdbtn_T2);
+		rdbtn_AntAliasingCH1.setSelected(false);
+		rdbtn_AntAliasingCH2.setSelected(false);
+		rdbtn_SingleShot.setSelected(false);
+		rdbtn_Stop.setSelected(false);
+		rdbtn_T1.setEnabled(false);
+		rdbtn_T2.setEnabled(false);
+		rdbtn_Trigger.setSelected(false);
 		controle.startAll();
+		
+		
 	}
 	public ChartPanel getChartPanel(){
 		return chartPanel;
