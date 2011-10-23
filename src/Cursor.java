@@ -9,7 +9,6 @@ public class Cursor{
 	private ValueMarker marker;
 	private boolean selecionado;
 	public static boolean ativo;
-	RectangleInsets ri;
 	
 	public Cursor(int numCursor){
 		
