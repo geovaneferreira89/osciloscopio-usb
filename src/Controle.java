@@ -77,7 +77,7 @@ public class Controle implements Runnable{
 						uc.setStatus(false);
 					}
 					
-					System.out.println(ch1.getTensaoPP());
+					//System.out.println(ch1.getTensaoPP());
 					Monitor.M_C.livre = true;
 					Monitor.M_C.notifyAll();
 				}
