@@ -61,6 +61,10 @@ public class Canal {
 		return antAliasing;
 	}
 	
+	public void newSeries(){
+		seriesCH = new XYSeries("Series "+ numCanal);
+	}
+	
 	public void calcTensaoRMS(){
 	}
 	
