@@ -15,6 +15,7 @@ public class Emb_SAD{
 	public static boolean antAliasingCH2 = false;
 	
 	
+	
 	//Utilizar qndo o protocolo for decidido
 	//public static final int bufferOut_uC = x;
 	

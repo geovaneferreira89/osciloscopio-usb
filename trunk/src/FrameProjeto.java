@@ -80,7 +80,6 @@ public class FrameProjeto extends JFrame {
 		JPanel panel_Cursores = new JPanel();
 		JPanel pnl_trigger = new JPanel();
 		JPanel panel_singleShot = new JPanel();	
-		JPanel panel_AntAliasing = new JPanel();
 		
 		//Botoes
 		JButton btn_ConectarUSB = new JButton("Iniciar Conex\u00E3o");
@@ -143,7 +142,6 @@ public class FrameProjeto extends JFrame {
 		final JRadioButton rdbtn_T1 = new JRadioButton("Canal 1");
 		final JRadioButton rdbtn_T2 = new JRadioButton("Canal 2");
 		final JRadioButton rdbtn_SingleShot = new JRadioButton("On");
-		final JRadioButton rdbtn_AntAliasing = new JRadioButton("On");
 		final JRadioButton rdbtn_Trigger = new JRadioButton("On");
 		rdbtn_Trigger.setForeground(Color.BLACK);
 		
@@ -169,22 +167,13 @@ public class FrameProjeto extends JFrame {
 			}
 		});
 		
-		
-		rdbtn_AntAliasing.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				controle.setAntAliasing(rdbtn_AntAliasing.isSelected());
-				controle.warnEmb();
-			}
-		});
-		
 		contentPane.setBackground(UIManager.getColor("Button.background"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 	
 		pnl_Opcoes.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Op\u00E7\u00F5es ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnl_Opcoes.setBounds(760, 8, 314, 91);
+		pnl_Opcoes.setBounds(760, 8, 314, 71);
 		contentPane.add(pnl_Opcoes);
 		pnl_Opcoes.setLayout(null);
 		
@@ -229,13 +218,13 @@ public class FrameProjeto extends JFrame {
 			}
 		});
 		
-		pnl_CH1.setBounds(760, 215, 314, 94);
+		pnl_CH1.setBounds(760, 195, 314, 94);
 		contentPane.add(pnl_CH1);
 		pnl_CH1.setBorder(new TitledBorder(null, "Canal 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_CH1.setLayout(null);
 
 		rdbtn_CH1.setSelected(true);
-		rdbtn_CH1.setBounds(6, 18, 50, 23);
+		rdbtn_CH1.setBounds(6, 18, 41, 23);
 		pnl_CH1.add(rdbtn_CH1);
 		
 		btn_CH1_Mais.addActionListener(new ActionListener() {
@@ -244,7 +233,7 @@ public class FrameProjeto extends JFrame {
 				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
-		btn_CH1_Mais.setBounds(119, 34, 41, 23);
+		btn_CH1_Mais.setBounds(110, 43, 40, 14);
 		pnl_CH1.add(btn_CH1_Mais);
 		
 		btn_CH1_Menos.addActionListener(new ActionListener() {
@@ -253,7 +242,7 @@ public class FrameProjeto extends JFrame {
 				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
-		btn_CH1_Menos.setBounds(119, 60, 41, 23);
+		btn_CH1_Menos.setBounds(110, 56, 40, 14);
 		pnl_CH1.add(btn_CH1_Menos);
 		
 		lblEscala_1.setBounds(16, 48, 41, 14);
@@ -280,13 +269,13 @@ public class FrameProjeto extends JFrame {
 		lbl_FRQCH1.setBounds(227, 69, 46, 14);
 		pnl_CH1.add(lbl_FRQCH1);
 		
-		pnl_CH2.setBounds(760, 312, 314, 94);
+		pnl_CH2.setBounds(760, 292, 314, 94);
 		contentPane.add(pnl_CH2);
 		pnl_CH2.setBorder(new TitledBorder(null, "Canal 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_CH2.setLayout(null);
 
 		rdbtn_CH2.setSelected(true);
-		rdbtn_CH2.setBounds(6, 18, 50, 23);
+		rdbtn_CH2.setBounds(6, 18, 39, 23);
 		pnl_CH2.add(rdbtn_CH2);
 		
 		lblEscala.setBounds(16, 46, 41, 16);
@@ -298,7 +287,7 @@ public class FrameProjeto extends JFrame {
 				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
-		btn_CH2_Menos.setBounds(121, 55, 41, 23);
+		btn_CH2_Menos.setBounds(110, 56, 40, 14);
 		pnl_CH2.add(btn_CH2_Menos);
 	
 		btn_CH2_Mais.addActionListener(new ActionListener() {
@@ -307,7 +296,7 @@ public class FrameProjeto extends JFrame {
 				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
-		btn_CH2_Mais.setBounds(121, 29, 41, 23);
+		btn_CH2_Mais.setBounds(110, 43, 40, 14);
 		pnl_CH2.add(btn_CH2_Mais);
 		
 		lbl_EscalaCH2.setBounds(56, 48, 55, 14);
@@ -332,7 +321,7 @@ public class FrameProjeto extends JFrame {
 		pnl_CH2.add(lbl_RMSCH2);
 		
 		panel_BT.setBorder(new TitledBorder(null, "Base de Tempo", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_BT.setBounds(760, 417, 314, 78);
+		panel_BT.setBounds(760, 397, 314, 78);
 		contentPane.add(panel_BT);
 		panel_BT.setLayout(null);
 		
@@ -344,7 +333,7 @@ public class FrameProjeto extends JFrame {
 				lbl_EscalaBT.setText(controle.atualizaEscalaTempo(1));
 			}
 		});
-		btn_BT_Mais.setBounds(121, 18, 41, 23);
+		btn_BT_Mais.setBounds(110, 30, 40, 14);
 		panel_BT.add(btn_BT_Mais);
 		
 		btn_BT_Menos.addActionListener(new ActionListener() {
@@ -352,14 +341,14 @@ public class FrameProjeto extends JFrame {
 				lbl_EscalaBT.setText(controle.atualizaEscalaTempo(-1));
 			}
 		});
-		btn_BT_Menos.setBounds(121, 44, 41, 23);
+		btn_BT_Menos.setBounds(110, 43, 40, 14);
 		panel_BT.add(btn_BT_Menos);
 		
-		lbl_EscalaBT.setBounds(56, 35, 55, 14);
+		lbl_EscalaBT.setBounds(56, 35, 54, 14);
 		panel_BT.add(lbl_EscalaBT);
 
 		panel_Cursores.setBorder(new TitledBorder(null, "Cursores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_Cursores.setBounds(760, 496, 314, 163);
+		panel_Cursores.setBounds(760, 476, 314, 163);
 		contentPane.add(panel_Cursores);
 		panel_Cursores.setLayout(null);
 		
@@ -493,7 +482,7 @@ public class FrameProjeto extends JFrame {
 		
 		pnl_trigger.setBorder(new TitledBorder(null, "Trigger", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_trigger.setLayout(null);
-		pnl_trigger.setBounds(760, 110, 229, 94);
+		pnl_trigger.setBounds(760, 90, 229, 94);
 		contentPane.add(pnl_trigger);
 	
 		rdbtn_T1.setSelected(true);
@@ -510,23 +499,13 @@ public class FrameProjeto extends JFrame {
 		
 		panel_singleShot.setBorder(new TitledBorder(null, "SingleShot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_singleShot.setLayout(null);
-		panel_singleShot.setBounds(999, 163, 75, 41);
+		panel_singleShot.setBounds(999, 90, 75, 41);
 		contentPane.add(panel_singleShot);
 		
 
 		rdbtn_SingleShot.setSelected(true);
 		rdbtn_SingleShot.setBounds(6, 18, 50, 16);
 		panel_singleShot.add(rdbtn_SingleShot);
-		
-		panel_AntAliasing.setBorder(new TitledBorder(null, "Ant-Aliasing", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_AntAliasing.setLayout(null);
-		panel_AntAliasing.setBounds(999, 111, 75, 41);
-		contentPane.add(panel_AntAliasing);
-		
-
-		rdbtn_AntAliasing.setSelected(true);
-		rdbtn_AntAliasing.setBounds(6, 15, 50, 23);
-		panel_AntAliasing.add(rdbtn_AntAliasing);
 		
 
 		rdbtn_Trigger.setBounds(6, 15, 50, 23);
@@ -622,7 +601,38 @@ public class FrameProjeto extends JFrame {
 
 		lbl_EscalaBT.setText(Canal.escalaTempoStr[0]);
 		lbl_EscalaCH1.setText(Canal.escalaTensaoStr[0]);
+		final JRadioButton rdbtn_AntAliasingCH1 = new JRadioButton("Ant-Aliasing");
+		rdbtn_AntAliasingCH1.setBounds(49, 18, 100, 23);
+		pnl_CH1.add(rdbtn_AntAliasingCH1);
+		
+		
+		rdbtn_AntAliasingCH1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				controle.setAntAliasing(rdbtn_AntAliasingCH1.isSelected());
+				controle.warnEmb();
+			}
+		});
+		
+
+		rdbtn_AntAliasingCH1.setSelected(true);
 		lbl_EscalaCH2.setText(Canal.escalaTensaoStr[0]);
+		
+		JRadioButton rdbtn_AntAliasingCH2 = new JRadioButton("Ant-Aliasing");
+		rdbtn_AntAliasingCH2.setSelected(true);
+		rdbtn_AntAliasingCH2.setBounds(49, 18, 100, 23);
+		pnl_CH2.add(rdbtn_AntAliasingCH2);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Stop", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setLayout(null);
+		panel.setBounds(999, 142, 75, 41);
+		contentPane.add(panel);
+		
+		JRadioButton radioButton = new JRadioButton("On");
+		radioButton.setSelected(true);
+		radioButton.setBounds(6, 18, 50, 16);
+		panel.add(radioButton);
 		
 		controle.startAll();
 	}
