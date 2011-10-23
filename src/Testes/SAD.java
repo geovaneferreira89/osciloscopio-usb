@@ -1,5 +1,6 @@
 package Testes;
 
+
 public class SAD extends Thread{
 	private int valor;
 	private boolean atenua;
@@ -19,7 +20,7 @@ public class SAD extends Thread{
 		return valor+1.65;
 	}
 	public int sample(double valor){
-		if ( atenua) valor /= 12;
+		if ( atenua) valor /= 13; // De alguma forma temos que identificar se o sinal que vem é saturado***.
 		if ( amplifica) valor *=4;
 		valor = offset(valor);
 		if ( valor > 3.3) valor = 3.3;
