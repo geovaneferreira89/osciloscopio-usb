@@ -11,6 +11,10 @@ public class Canal {
 	private double tensaoPP;
 	private double frequencia;
 	
+	private boolean amplifica = false;
+	private boolean atenua = true;
+	private boolean antAliasing = false;
+	
 	private int escalaTensao;
 	public static int escalaTempo;
 	public static double [] seriesEscalaTempo = {0.000005,0.00005,0.0005,0.005,0.05,0.5,1}; //EXEMPLO
@@ -38,6 +42,9 @@ public class Canal {
 		calcTensaoPP();
 		calcTensaoRMS();
 		calcFrequencia();
+	}
+	public void configCanal(boolean amplifica, boolean atenua, boolean antAliasing){
+		
 	}
 	
 	public void calcTensaoRMS(){
