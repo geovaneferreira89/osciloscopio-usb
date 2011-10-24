@@ -189,7 +189,7 @@ public class FrameProjeto extends JFrame {
 		contentPane.add(pnl_Plotter);
 		pnl_Plotter.setLayout(null);
 		
-        JFreeChart chart = new JFreeChart("", null, controle.getCombinedPlot(), false);
+        JFreeChart chart = new JFreeChart("", null, controle.getPlot(), false);
         
 		chartPanel = new ChartPanel(chart);
 

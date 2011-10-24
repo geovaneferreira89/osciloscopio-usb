@@ -287,13 +287,8 @@ public class Controle implements Runnable{
 	}
 	
 	public XYPlot getPlot(){
-		return null;
+		return plotter.getPlot();
 	}
-	
-	public CombinedDomainXYPlot getCombinedPlot(){
-		return plotter.getCombinedPlot();
-	}
-	
 	public Cursor getCursor1(){
 		return cursor1;
 	}
