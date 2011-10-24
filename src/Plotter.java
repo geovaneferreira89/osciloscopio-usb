@@ -6,8 +6,10 @@ import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
 import org.jfree.chart.renderer.xy.SamplingXYLineRenderer;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYDotRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -18,7 +20,6 @@ import Testes.microControlador;
 public class Plotter implements Runnable{
 
 	private XYPlot plot;
-	private CombinedDomainXYPlot combinedPlot;
 	private Controle controle;
 	private XYSeriesCollection collection;
 	
@@ -26,24 +27,23 @@ public class Plotter implements Runnable{
 	private double posTempoCH2;
 	
 	public static final int rangePlotter = 5;
-	
+    //Isso provavelmente n ficará aqui
 	private int [] dataCH1;
 	private int [] dataCH2;
 	
 	public Plotter(Controle c){
 		
 		controle = c;
-		collection = new XYSeriesCollection();
 		
-        XYItemRenderer renderer = new StandardXYItemRenderer();
+        XYItemRenderer renderer = new XYDotRenderer();//StandardXYItemRenderer();//SamplingXYLineRenderer();
+        
+        //((StandardXYItemRenderer) renderer).setPlotLines(false);
+        
         NumberAxis rangeAxis = new NumberAxis("Tensão");
         rangeAxis.setAutoRange(false);
         rangeAxis.setRange(-rangePlotter, rangePlotter);
         rangeAxis.setAutoTickUnitSelection(false);
         rangeAxis.centerRange(0);
-
-        plot = new XYPlot(null, null, rangeAxis, renderer);
-        plot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
         
         NumberAxis domainAxis = new NumberAxis("Tempo");
         domainAxis.setAutoRange(false);
@@ -51,20 +51,21 @@ public class Plotter implements Runnable{
         domainAxis.setAutoTickUnitSelection(false);
         domainAxis.centerRange(0);
         
-        combinedPlot = new CombinedDomainXYPlot(domainAxis);
-        combinedPlot.add(plot);
-
+        collection = new XYSeriesCollection();
+        collection.addSeries(controle.getCanal1().getSeries());
+        //collection.addSeries(controle.getCanal2().getSeries());
+        plot = new XYPlot(collection, domainAxis, rangeAxis, renderer);
+        plot.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+        
         configDomainMarker();
         configRangeMarker();
         
         posTempoCH1 = -rangePlotter;
         posTempoCH2 = -rangePlotter;
-        
+        //Isso provavelmente n ficará aqui
         dataCH1 = new int[microControlador.bufferuC];
         dataCH2 = new int[microControlador.bufferuC];
         
-	    collection.addSeries(controle.getCanal1().getSeries());
-		plot.setDataset(collection);
 	}
 	public void atualizaDataCanais(int [] dataCH1, int [] dataCH2){
 		this.dataCH1 = dataCH1;
@@ -96,12 +97,22 @@ public class Plotter implements Runnable{
 		try{
 			for(int i = 0 ; i < microControlador.bufferuC; i++)
 			{
+				if(controle.getCanal1().getSeries().isEmpty()){
+					//System.out.println("IAE1");
+					//System.out.println(controle.getCanal1().getSeries().getItemCount());
+				}
+					
+				controle.getCanal1().getSeries().add(posTempoCH1,DDC.converteDigitalDouble(controle.getCanal1(), dataCH1[i]));
+				if(posTempoCH1 == -5){
+					//System.out.println("IAE2");
+				}
 				posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
 				if(posTempoCH1 > rangePlotter){
 					posTempoCH1 = -rangePlotter;
-					System.out.println("OI1");
+					//System.out.println("OI1");
+					//System.out.println(controle.getCanal1().getSeries().getItemCount());
 					controle.getCanal1().getSeries().clear();
-					System.out.println("OI2");
+					//System.out.println("OI2");
 				}
 			}
 		}
@@ -140,9 +151,4 @@ public class Plotter implements Runnable{
 	public XYPlot getPlot(){
 		return plot;
 	}
-	
-	public CombinedDomainXYPlot getCombinedPlot(){
-		return combinedPlot;
-	}
-	
 }
