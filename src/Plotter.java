@@ -35,7 +35,7 @@ public class Plotter implements Runnable{
 		
 		controle = c;
 		
-        XYItemRenderer renderer = new XYDotRenderer();//StandardXYItemRenderer();//SamplingXYLineRenderer();
+        XYItemRenderer renderer = new StandardXYItemRenderer();//SamplingXYLineRenderer();
         
         //((StandardXYItemRenderer) renderer).setPlotLines(false);
         
