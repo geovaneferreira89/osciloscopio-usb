@@ -42,7 +42,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JSpinner;
 import java.awt.Component;
 
-import Simulacao.*;
+import Testes.*;
 
 
 @SuppressWarnings("serial")
