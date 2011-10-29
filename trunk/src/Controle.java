@@ -3,9 +3,9 @@ import javax.swing.JFrame;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.XYPlot;
 
-import Testes.GeradorDeFuncoes;
-import Testes.Monitor;
-import Testes.microControlador;
+import Simulacao.GeradorDeFuncoes;
+import Simulacao.Monitor;
+import Simulacao.microControlador;
 
 public class Controle implements Runnable{
 	private boolean singleShot;
