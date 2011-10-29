@@ -58,9 +58,6 @@ public class FrameProjeto extends JFrame {
 	Controle controle;
 
 	private ChartPanel chartPanel;
-
-	
-
 	public FrameProjeto() throws ParseException  {
 		
 		// Frame Principal
@@ -533,7 +530,7 @@ public class FrameProjeto extends JFrame {
 		pnl_trigger.add(rdbtn_Trigger);
 		
 
-		NumberFormat number = NumberFormat.getNumberInstance();  
+		NumberFormat number = NumberFormat.getNumberInstance();
 		number.setMinimumFractionDigits(1); 
 		final JFormattedTextField ftf_Trigger = new JFormattedTextField(number);
 		ftf_Trigger.addKeyListener(new KeyAdapter() {
