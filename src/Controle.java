@@ -46,7 +46,7 @@ public class Controle implements Runnable{
 		
 		//Objetos teste.
 		g1 = new GeradorDeFuncoes();
-		g1.setAmplitude(20);
+		g1.setAmplitude(1.5);
 		g1.setFrequencia(50);
 		g1.setEstado(GeradorDeFuncoes.SENOIDE);
 		uc = new microControlador(g1);
