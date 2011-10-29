@@ -1,15 +1,11 @@
 import java.awt.Color;
 import java.awt.GradientPaint;
 
-import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.axis.AxisLocation;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
 import org.jfree.chart.renderer.xy.SamplingXYLineRenderer;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYDotRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -26,7 +22,7 @@ public class Plotter implements Runnable{
 	private double posTempoCH1;
 	private double posTempoCH2;
 	
-	public static final int rangePlotter = 5;
+	public static final int rangePlotter = 3;
     //Isso provavelmente n ficará aqui
 	private int [] dataCH1;
 	private int [] dataCH2;
@@ -35,9 +31,7 @@ public class Plotter implements Runnable{
 		
 		controle = c;
 		
-        XYItemRenderer renderer = new StandardXYItemRenderer();//SamplingXYLineRenderer();
-        
-        //((StandardXYItemRenderer) renderer).setPlotLines(false);
+        XYItemRenderer renderer = new SamplingXYLineRenderer();//StandardXYItemRenderer();
         
         NumberAxis rangeAxis = new NumberAxis("Tensão");
         rangeAxis.setAutoRange(false);
@@ -94,35 +88,15 @@ public class Plotter implements Runnable{
 		}
 	}
 	public void atualizaPlotter(){
-		try{
-			for(int i = 0 ; i < microControlador.bufferuC; i++)
-			{
-				if(controle.getCanal1().getSeries().isEmpty()){
-					//System.out.println("IAE1");
-					//System.out.println(controle.getCanal1().getSeries().getItemCount());
-				}
-					
-				controle.getCanal1().getSeries().add(posTempoCH1,DDC.converteDigitalDouble(controle.getCanal1(), dataCH1[i]));
-				if(posTempoCH1 == -5){
-					//System.out.println("IAE2");
-				}
-				posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
-				if(posTempoCH1 > rangePlotter){
-					posTempoCH1 = -rangePlotter;
-					//System.out.println("OI1");
-					//System.out.println(controle.getCanal1().getSeries().getItemCount());
-					controle.getCanal1().getSeries().clear();
-					//System.out.println("OI2");
-				}
+		for(int i = 0 ; i < microControlador.bufferuC; i++)
+		{
+			controle.getCanal1().getSeries().add(posTempoCH1,DDC.converteDigitalDouble(controle.getCanal1(), dataCH1[i]));
+			posTempoCH1 = posTempoCH1 + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
+			if(posTempoCH1 > rangePlotter){
+				posTempoCH1 = -rangePlotter;
+				controle.getCanal1().getSeries().clear();
 			}
 		}
-		catch(java.lang.IndexOutOfBoundsException e){
-			System.out.println("PQP");
-		}
-		catch (java.lang.NullPointerException e ){
-			System.out.println("PQP");
-		}
-		//controle.getFrameProjeto().getChartPanel().repaint();
 	}
 	public void configDomainMarker(){
 		ValueMarker marker;
