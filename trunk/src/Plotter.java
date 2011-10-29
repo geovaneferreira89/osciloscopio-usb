@@ -9,9 +9,9 @@ import org.jfree.chart.renderer.xy.SamplingXYLineRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import Testes.GeradorDeFuncoes;
-import Testes.Monitor;
-import Testes.microControlador;
+import Simulacao.GeradorDeFuncoes;
+import Simulacao.Monitor;
+import Simulacao.microControlador;
 
 public class Plotter implements Runnable{
 
