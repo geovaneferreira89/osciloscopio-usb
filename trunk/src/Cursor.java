@@ -29,6 +29,7 @@ public class Cursor{
 	public double getPosicao(){
 		return marker.getValue();
 	}
+	
 	public double[] getDados(Canal ch1, Canal ch2){
 		return null;
 	}
