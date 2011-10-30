@@ -10,18 +10,21 @@ public class Trigger{
 	private ValueMarker marker;
 	private Canal ch;
 	
-	public Trigger(boolean ativo){
+	public Trigger(boolean ativo,Canal ch){
 		
 		marker = new ValueMarker(0);
 		marker.setLabelOffset(new RectangleInsets(0,20,0,0));
 		marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.green, 3.0f, 4.0f, Color.green));
 		marker.setLabel("Trigger");
 		this.ativo = ativo;
-
+		this.ch = ch;
 	}
 	
-	public void config(Canal ch){
+	public void setCanal(Canal ch){
 		this.ch = ch;
+	}
+	public Canal getCanal(){
+		return ch;
 	}
 	
 	public void setPosicao(double posicao){

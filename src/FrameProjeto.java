@@ -43,6 +43,7 @@ import javax.swing.JSpinner;
 import java.awt.Component;
 
 import Testes.*;
+import java.text.Format;
 
 
 @SuppressWarnings("serial")
@@ -56,31 +57,36 @@ public class FrameProjeto extends JFrame {
 		fp.setVisible(true);
 	}
 	Controle controle;
-
 	private ChartPanel chartPanel;
+	private JLabel lbl_c1_ch1 = new JLabel("0.00 V");
+	private JLabel lbl_c1_ch2 = new JLabel("0.00 V");
+	private JLabel lbl_c2_ch1 = new JLabel("0.00 V");
+	private JLabel lbl_c2_ch2 = new JLabel("0.00 V");
+	private JLabel lbl_c12_ch1 = new JLabel("0.00 V");
+	private JLabel lbl_c21_ch1;
+	private JLabel lbl_c12_ch2 = new JLabel("0.00 V");
+	private JLabel lbl_c21_ch2;
+	private JLabel lbl_c12_T = new JLabel("0.00 s");
+	private JLabel lbl_c21_T;
+	
 	public FrameProjeto() throws ParseException  {
 		
 		// Frame Principal
 		setTitle("Oscilosc\u00F3pio ");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(1100,702);
+		setSize(1346,750);
 		setResizable(true);
 		controle = new Controle(this);
         
 		//Paineis
 		JPanel contentPane = new JPanel();
-		JPanel pnl_Opcoes = new JPanel();
 		JPanel pnl_Plotter = new JPanel();
 		JPanel pnl_CH1 = new JPanel();
 		JPanel pnl_CH2 = new JPanel();
 		JPanel panel_BT = new JPanel();
 		JPanel panel_Cursores = new JPanel();
 		JPanel pnl_trigger = new JPanel();
-		JPanel panel_singleShot = new JPanel();	
-		
-		//Botoes
-		JButton btn_ConectarUSB = new JButton("Iniciar Conex\u00E3o");
-		JButton btn_Teste = new JButton("Teste");
+		JPanel panel_singleShot = new JPanel();
 		JButton btn_CH1_Mais = new JButton("+");
 		JButton btn_CH1_Menos = new JButton("-");
 		JButton btn_CH2_Menos = new JButton("-");
@@ -90,13 +96,13 @@ public class FrameProjeto extends JFrame {
 		
 		//Labels
 		JLabel lbl_UsbStatus = new JLabel("USB: N\u00E3o Conectada");
-		JLabel lblEscala_1 = new JLabel("Escala");
+		JLabel lblEscala_1 = new JLabel("Escala:");
 		final JLabel lbl_EscalaCH1 = new JLabel("2 mV / div");
 		JLabel lbl_rms1 = new JLabel("Tens\u00E3o RMS:");
 		JLabel lbl_pp1 = new JLabel("Tens\u00E3o Pico \u00E0 Pico:");
 		JLabel lbl_frq1 = new JLabel("Frequ\u00EAncia:");
-		JLabel lbl_RMSCH1 = new JLabel("0000 mV");
-		JLabel lbl_PPCH1 = new JLabel("0000 mV");
+		JLabel lbl_RMSCH1 = new JLabel("000 mV");
+		JLabel lbl_PPCH1 = new JLabel("000 mV");
 		JLabel lbl_FRQCH1 = new JLabel("0000 Hz");
 		final JLabel lbl_EscalaCH2 = new JLabel("2 mV / div");
 		JLabel label = new JLabel("Tens\u00E3o RMS:");
@@ -107,7 +113,7 @@ public class FrameProjeto extends JFrame {
 		JLabel lbl_RMSCH2 = new JLabel("0000 mV");
 		JLabel lbl_Tempo = new JLabel("Tempo");
 		final JLabel lbl_EscalaBT = new JLabel();
-		JLabel lblEscala = new JLabel("Escala");
+		JLabel lblEscala = new JLabel("Escala:");
 		JLabel lblCursor = new JLabel("Cursor1");
 		lblCursor.setForeground(Color.BLUE);
 		JLabel lblCursor_1 = new JLabel("Cursor2");
@@ -115,20 +121,20 @@ public class FrameProjeto extends JFrame {
 		JLabel lblCursorCursor = new JLabel("Cursor2 - Cursor1");
 		JLabel lblCanal = new JLabel("Tensao Canal 1");
 		JLabel lblTensaoCanal = new JLabel("Tensao Canal 2");
-		JLabel lblV = new JLabel("0.00 V");
-		JLabel label_4 = new JLabel("0.00 V");
 		JLabel label_5 = new JLabel("Tensao Canal 1");
-		JLabel label_6 = new JLabel("0.00 V");
 		JLabel label_7 = new JLabel("Tensao Canal 2");
-		JLabel label_8 = new JLabel("0.00 V");
 		JLabel label_11 = new JLabel("Tensao Canal 1");
-		JLabel label_12 = new JLabel("0.00 V");
 		JLabel label_13 = new JLabel("Tensao Canal 2");
-		JLabel label_14 = new JLabel("0.00 V");
 		JLabel label_15 = new JLabel("Tempo");
-		JLabel label_16 = new JLabel("0.00 s");
-		JLabel lblTensao = new JLabel("Posi\u00E7\u00E3o (div.):");
+		JLabel lblTensao = new JLabel("Posi\u00E7\u00E3o (div):");
 		JSeparator separator = new JSeparator();
+		lbl_c1_ch2 = new JLabel("0.00 V");
+		lbl_c1_ch1 = new JLabel("0.00 V");
+		lbl_c2_ch1 = new JLabel("0.00 V");
+		lbl_c2_ch2 = new JLabel("0.00 V");
+		lbl_c21_ch1 = new JLabel("0.00 V");
+		lbl_c21_ch2 = new JLabel("0.00 V");
+		lbl_c21_T = new JLabel("0.00 s");
 		
 		// JRadioButton
 		final JRadioButton rdbtn_CH1 = new JRadioButton("On");
@@ -147,14 +153,14 @@ public class FrameProjeto extends JFrame {
 		rdbtn_T2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controle.selectCanalTrigger(1);
+				controle.selectCanalTrigger(controle.getCanal2());
 			}
 		});
 		
 		rdbtn_T1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controle.selectCanalTrigger(1);
+				controle.selectCanalTrigger(controle.getCanal1());
 			}
 		});
 		
@@ -172,17 +178,9 @@ public class FrameProjeto extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-	
-		pnl_Opcoes.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Op\u00E7\u00F5es ", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnl_Opcoes.setBounds(760, 8, 314, 71);
-		contentPane.add(pnl_Opcoes);
-		pnl_Opcoes.setLayout(null);
-		
-		btn_ConectarUSB.setBounds(17, 25, 107, 29);
-		pnl_Opcoes.add(btn_ConectarUSB);
 		
 		pnl_Plotter.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnl_Plotter.setBounds(6, 8, 744, 585);
+		pnl_Plotter.setBounds(10, 11, 990, 692);
 		contentPane.add(pnl_Plotter);
 		pnl_Plotter.setLayout(null);
 		
@@ -190,7 +188,7 @@ public class FrameProjeto extends JFrame {
         
 		chartPanel = new ChartPanel(chart);
 
-		chartPanel.setBounds(16, 40, 680, 534);
+		chartPanel.setBounds(10, 51, 970, 630);
 		pnl_Plotter.add(chartPanel);
 		chartPanel.setBackground(Color.GRAY);
 		chartPanel.setLayout(new GridLayout(0, 1, 0, 0));
@@ -201,26 +199,24 @@ public class FrameProjeto extends JFrame {
 	
 		
 		lbl_UsbStatus.setForeground(Color.RED);
-		lbl_UsbStatus.setBounds(16, 20, 131, 16);
+		lbl_UsbStatus.setBounds(730, 11, 100, 16);
 		pnl_Plotter.add(lbl_UsbStatus);
 		
-	
-		btn_Teste.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//System.out.println(kk);
+		//Botoes
+		JButton btn_ConectarUSB = new JButton("Iniciar Conex\u00E3o");
+		btn_ConectarUSB.setBounds(16, 11, 107, 29);
+		pnl_Plotter.add(btn_ConectarUSB);
+		btn_ConectarUSB.addMouseListener(new MouseAdapter() {
+			
+			public void mouseClicked(MouseEvent arg0)
+			{
+				controle.conectarUSB();
+				JOptionPane.showMessageDialog(FrameProjeto.this, "Conectando... ");
 			}
+			
 		});
 		
-		btn_Teste.setBounds(578, 14, 74, 28);
-		pnl_Plotter.add(btn_Teste);
-		btn_Teste.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {		 
-
-			}
-		});
-		
-		pnl_CH1.setBounds(760, 195, 314, 94);
+		pnl_CH1.setBounds(1010, 168, 310, 145);
 		contentPane.add(pnl_CH1);
 		pnl_CH1.setBorder(new TitledBorder(null, "Canal 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_CH1.setLayout(null);
@@ -231,47 +227,47 @@ public class FrameProjeto extends JFrame {
 		
 		btn_CH1_Mais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(1,1));
-				//controle.warnEmb(); Vai depender de algumas coisas;
+				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(controle.getCanal1(),1));
+				//controle.warnEmb(); Vai depender de algumas condições;
 			}
 		});
-		btn_CH1_Mais.setBounds(110, 43, 40, 14);
+		btn_CH1_Mais.setBounds(100, 43, 40, 14);
 		pnl_CH1.add(btn_CH1_Mais);
 		
 		btn_CH1_Menos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(1,-1));
+				lbl_EscalaCH1.setText(controle.atualizaEscalaTensao(controle.getCanal1(),-1));
 				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
-		btn_CH1_Menos.setBounds(110, 56, 40, 14);
+		btn_CH1_Menos.setBounds(100, 56, 40, 14);
 		pnl_CH1.add(btn_CH1_Menos);
 		
-		lblEscala_1.setBounds(16, 48, 41, 14);
+		lblEscala_1.setBounds(6, 48, 41, 14);
 		pnl_CH1.add(lblEscala_1);
 		
-		lbl_EscalaCH1.setBounds(54, 48, 55, 14);
+		lbl_EscalaCH1.setBounds(45, 48, 55, 14);
 		pnl_CH1.add(lbl_EscalaCH1);
 		
-		lbl_rms1.setBounds(170, 27, 63, 14);
+		lbl_rms1.setBounds(208, 18, 63, 14);
 		pnl_CH1.add(lbl_rms1);
 		
-		lbl_pp1.setBounds(170, 48, 92, 14);
+		lbl_pp1.setBounds(208, 61, 92, 14);
 		pnl_CH1.add(lbl_pp1);
 		
-		lbl_frq1.setBounds(170, 69, 57, 14);
+		lbl_frq1.setBounds(208, 102, 57, 14);
 		pnl_CH1.add(lbl_frq1);
 		
-		lbl_RMSCH1.setBounds(236, 27, 46, 14);
+		lbl_RMSCH1.setBounds(208, 32, 46, 14);
 		pnl_CH1.add(lbl_RMSCH1);
 		
-		lbl_PPCH1.setBounds(264, 48, 46, 14);
+		lbl_PPCH1.setBounds(208, 72, 46, 14);
 		pnl_CH1.add(lbl_PPCH1);
 		
-		lbl_FRQCH1.setBounds(227, 69, 46, 14);
+		lbl_FRQCH1.setBounds(208, 116, 46, 14);
 		pnl_CH1.add(lbl_FRQCH1);
 		
-		pnl_CH2.setBounds(760, 292, 314, 94);
+		pnl_CH2.setBounds(1010, 326, 310, 145);
 		contentPane.add(pnl_CH2);
 		pnl_CH2.setBorder(new TitledBorder(null, "Canal 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_CH2.setLayout(null);
@@ -280,50 +276,50 @@ public class FrameProjeto extends JFrame {
 		rdbtn_CH2.setBounds(6, 18, 39, 23);
 		pnl_CH2.add(rdbtn_CH2);
 		
-		lblEscala.setBounds(16, 46, 41, 16);
+		lblEscala.setBounds(6, 48, 41, 14);
 		pnl_CH2.add(lblEscala);
 		
 		btn_CH2_Menos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(2,-1));
+				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(controle.getCanal2(),-1));
 				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
-		btn_CH2_Menos.setBounds(110, 56, 40, 14);
+		btn_CH2_Menos.setBounds(100, 56, 40, 14);
 		pnl_CH2.add(btn_CH2_Menos);
 	
 		btn_CH2_Mais.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(2,1));
+				lbl_EscalaCH2.setText(controle.atualizaEscalaTensao(controle.getCanal2(),1));
 				//controle.warnEmb(); Vai depender de algumas coisas;
 			}
 		});
-		btn_CH2_Mais.setBounds(110, 43, 40, 14);
+		btn_CH2_Mais.setBounds(100, 43, 40, 14);
 		pnl_CH2.add(btn_CH2_Mais);
 		
-		lbl_EscalaCH2.setBounds(56, 48, 55, 14);
+		lbl_EscalaCH2.setBounds(45, 48, 55, 14);
 		pnl_CH2.add(lbl_EscalaCH2);
 		
-		label.setBounds(168, 22, 63, 14);
+		label.setBounds(208, 18, 63, 14);
 		pnl_CH2.add(label);
 		
-		label_1.setBounds(168, 43, 92, 14);
+		label_1.setBounds(208, 61, 92, 14);
 		pnl_CH2.add(label_1);
 		
-		label_2.setBounds(168, 64, 57, 14);
+		label_2.setBounds(208, 102, 57, 14);
 		pnl_CH2.add(label_2);
 		
-		lbl_FRQCH2.setBounds(225, 64, 46, 14);
+		lbl_FRQCH2.setBounds(208, 116, 46, 14);
 		pnl_CH2.add(lbl_FRQCH2);
 		
-		lbl_PPCH2.setBounds(262, 43, 46, 14);
+		lbl_PPCH2.setBounds(208, 72, 46, 14);
 		pnl_CH2.add(lbl_PPCH2);
 		
-		lbl_RMSCH2.setBounds(234, 22, 46, 14);
+		lbl_RMSCH2.setBounds(208, 32, 46, 14);
 		pnl_CH2.add(lbl_RMSCH2);
 		
 		panel_BT.setBorder(new TitledBorder(null, "Base de Tempo", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_BT.setBounds(760, 397, 314, 78);
+		panel_BT.setBounds(1010, 482, 310, 78);
 		contentPane.add(panel_BT);
 		panel_BT.setLayout(null);
 		
@@ -350,7 +346,7 @@ public class FrameProjeto extends JFrame {
 		panel_BT.add(lbl_EscalaBT);
 
 		panel_Cursores.setBorder(new TitledBorder(null, "Cursores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_Cursores.setBounds(760, 476, 314, 163);
+		panel_Cursores.setBounds(1010, 571, 310, 132);
 		contentPane.add(panel_Cursores);
 		panel_Cursores.setLayout(null);
 		
@@ -417,15 +413,6 @@ public class FrameProjeto extends JFrame {
 				controle.setCanal(1, rdbtn_CH1.isSelected());
 			}
 		});
-		btn_ConectarUSB.addMouseListener(new MouseAdapter() {
-			
-			public void mouseClicked(MouseEvent arg0)
-			{
-				controle.conectarUSB();
-				JOptionPane.showMessageDialog(FrameProjeto.this, "Conectando... ");
-			}
-			
-		});
 		
 	
 		lblCursor.setBounds(6, 39, 46, 14);
@@ -434,7 +421,7 @@ public class FrameProjeto extends JFrame {
 		lblCursor_1.setBounds(112, 39, 46, 14);
 		panel_Cursores.add(lblCursor_1);
 		
-		lblCursorCursor.setBounds(214, 39, 94, 14);
+		lblCursorCursor.setBounds(210, 39, 94, 14);
 		panel_Cursores.add(lblCursorCursor);
 		
 		lblCanal.setBounds(6, 51, 74, 14);
@@ -443,11 +430,11 @@ public class FrameProjeto extends JFrame {
 		lblTensaoCanal.setBounds(6, 76, 74, 14);
 		panel_Cursores.add(lblTensaoCanal);
 		
-		lblV.setBounds(6, 89, 46, 14);
-		panel_Cursores.add(lblV);
+		lbl_c1_ch2.setBounds(6, 89, 74, 14);
+		panel_Cursores.add(lbl_c1_ch2);
 		
-		label_4.setBounds(6, 64, 46, 14);
-		panel_Cursores.add(label_4);
+		lbl_c1_ch1.setBounds(6, 64, 74, 14);
+		panel_Cursores.add(lbl_c1_ch1);
 		
 		separator.setBounds(112, 66, 1, 2);
 		panel_Cursores.add(separator);
@@ -455,36 +442,36 @@ public class FrameProjeto extends JFrame {
 		label_5.setBounds(111, 51, 74, 14);
 		panel_Cursores.add(label_5);
 		
-		label_6.setBounds(111, 64, 46, 14);
-		panel_Cursores.add(label_6);
+		lbl_c2_ch1.setBounds(111, 64, 74, 14);
+		panel_Cursores.add(lbl_c2_ch1);
 		
 		label_7.setBounds(111, 76, 74, 14);
 		panel_Cursores.add(label_7);
 		
-		label_8.setBounds(111, 89, 46, 14);
-		panel_Cursores.add(label_8);
+		lbl_c2_ch2.setBounds(111, 89, 74, 14);
+		panel_Cursores.add(lbl_c2_ch2);
 		
-		label_11.setBounds(214, 64, 74, 14);
+		label_11.setBounds(210, 51, 74, 14);
 		panel_Cursores.add(label_11);
 		
-		label_12.setBounds(214, 77, 46, 14);
-		panel_Cursores.add(label_12);
+		lbl_c21_ch1.setBounds(210, 64, 74, 14);
+		panel_Cursores.add(lbl_c21_ch1);
 		
-		label_13.setBounds(214, 89, 74, 14);
+		label_13.setBounds(210, 76, 74, 14);
 		panel_Cursores.add(label_13);
 		
-		label_14.setBounds(214, 102, 46, 14);
-		panel_Cursores.add(label_14);
+		lbl_c21_ch2.setBounds(210, 89, 74, 14);
+		panel_Cursores.add(lbl_c21_ch2);
 		
-		label_15.setBounds(214, 123, 74, 14);
+		label_15.setBounds(210, 103, 46, 14);
 		panel_Cursores.add(label_15);
 		
-		label_16.setBounds(214, 136, 46, 14);
-		panel_Cursores.add(label_16);
+		lbl_c21_T.setBounds(210, 114, 74, 14);
+		panel_Cursores.add(lbl_c21_T);
 		
 		pnl_trigger.setBorder(new TitledBorder(null, "Trigger", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_trigger.setLayout(null);
-		pnl_trigger.setBounds(760, 90, 229, 94);
+		pnl_trigger.setBounds(1010, 11, 310, 94);
 		contentPane.add(pnl_trigger);
 	
 		rdbtn_T1.setSelected(true);
@@ -496,12 +483,12 @@ public class FrameProjeto extends JFrame {
 		pnl_trigger.add(rdbtn_T2);
 		
 		
-		lblTensao.setBounds(10, 60, 76, 14);
+		lblTensao.setBounds(10, 60, 69, 14);
 		pnl_trigger.add(lblTensao);
 		
 		panel_singleShot.setBorder(new TitledBorder(null, "SingleShot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_singleShot.setLayout(null);
-		panel_singleShot.setBounds(999, 90, 75, 41);
+		panel_singleShot.setBounds(1113, 116, 93, 41);
 		contentPane.add(panel_singleShot);
 		
 
@@ -531,23 +518,20 @@ public class FrameProjeto extends JFrame {
 		
 
 		NumberFormat number = NumberFormat.getNumberInstance();
-		number.setMinimumFractionDigits(1); 
+		number.setMinimumFractionDigits(0); 
 		final JFormattedTextField ftf_Trigger = new JFormattedTextField(number);
 		ftf_Trigger.addKeyListener(new KeyAdapter() {
 			@Override
 			
 			public void keyTyped(KeyEvent arg0) {
-				if(arg0.getKeyChar() == '.')
-				{
-					arg0.setKeyChar(',');
-				}
-
+				verificaDouble(arg0,ftf_Trigger);
 			}
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER)
 				{
 					if(rdbtn_Trigger.isSelected()){
+						
 						double posicao = Double.parseDouble(ftf_Trigger.getText().replace(',', '.'));
 						if(Math.abs(posicao)<Plotter.rangePlotter){
 							controle.atualizaPosTrigger(posicao);
@@ -558,69 +542,158 @@ public class FrameProjeto extends JFrame {
 		});
 		
 		
-		ftf_Trigger.setBounds(82, 57, 67, 20);
+		ftf_Trigger.setBounds(78, 57, 55, 20);
 		pnl_trigger.add(ftf_Trigger);
 		
-		JButton button = new JButton("+");
+		JButton btn_Trigger_mais = new JButton("+");
 		final DecimalFormat aproximador = new DecimalFormat( " 0.00 " );
-		button.addMouseListener(new MouseAdapter() {
+		btn_Trigger_mais.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controle.atualizaPosTrigger(1);
-				ftf_Trigger.setText("" + aproximador.format(controle.getTrigger().getPosicao()));
+				if(rdbtn_Trigger.isSelected()){
+					controle.atualizaPosTrigger(1);
+					ftf_Trigger.setText("" + aproximador.format(controle.getTrigger().getPosicao()));
+				}
 			}
 		});
-		button.setAlignmentY(Component.TOP_ALIGNMENT);
-		button.setBounds(150, 54, 40, 14);
-		pnl_trigger.add(button);
+		btn_Trigger_mais.setAlignmentY(Component.TOP_ALIGNMENT);
+		btn_Trigger_mais.setBounds(134, 53, 40, 14);
+		pnl_trigger.add(btn_Trigger_mais);
 		
-		JButton button_1 = new JButton("-");
-		button_1.addMouseListener(new MouseAdapter() {
+		JButton btn_Trigger_menos = new JButton("-");
+		btn_Trigger_menos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controle.atualizaPosTrigger(-1);
-				ftf_Trigger.setText("" + aproximador.format(controle.getTrigger().getPosicao()));
+				if(rdbtn_Trigger.isSelected()){
+					controle.atualizaPosTrigger(-1);
+					ftf_Trigger.setText("" + aproximador.format(controle.getTrigger().getPosicao()));
+				}
 			}
 		});
-		button_1.setBounds(150, 67, 40, 14);
-		pnl_trigger.add(button_1);
+		btn_Trigger_menos.setBounds(134, 66, 40, 14);
+		pnl_trigger.add(btn_Trigger_menos);
 		
 
 		lbl_EscalaBT.setText(Canal.escalaTempoStr[0]);
-		lbl_EscalaCH1.setText(Canal.escalaTensaoStr[0]);
-		final JRadioButton rdbtn_AntAliasingCH1 = new JRadioButton("Ant-Aliasing");
-		rdbtn_AntAliasingCH1.setBounds(49, 18, 100, 23);
-		pnl_CH1.add(rdbtn_AntAliasingCH1);
+		lbl_EscalaCH1.setText(Canal.escalaTensaoStr[Canal.seriesEscalaTensao.length-1]);
 		
 		
-		rdbtn_AntAliasingCH1.addMouseListener(new MouseAdapter() {
+		final JFormattedTextField ftf_offsetch1 = new JFormattedTextField((Format) null);
+		ftf_offsetch1.addKeyListener(new KeyAdapter() {
+			
+			public void keyTyped(KeyEvent arg0) {
+				verificaDouble(arg0,ftf_offsetch1);
+			}
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				controle.setAntAliasing(1,rdbtn_AntAliasingCH1.isSelected());
-				controle.warnEmb();
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					if(rdbtn_CH1.isSelected()){
+						
+						double posicao = Double.parseDouble(ftf_offsetch1.getText().replace(',', '.'));
+						if(Math.abs(posicao)<Plotter.rangePlotter){
+							controle.atualizaPosicaoOffset(controle.getCanal1(),posicao);
+						}	
+					}
+				}
 			}
 		});
+		ftf_offsetch1.setBounds(78, 110, 55, 20);
+		pnl_CH1.add(ftf_offsetch1);
 		
-
-		rdbtn_AntAliasingCH1.setSelected(true);
-		lbl_EscalaCH2.setText(Canal.escalaTensaoStr[0]);
-		
-		final JRadioButton rdbtn_AntAliasingCH2 = new JRadioButton("Ant-Aliasing");
-		rdbtn_AntAliasingCH2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				controle.setAntAliasing(2,rdbtn_AntAliasingCH2.isSelected());
-				controle.warnEmb();
+		JButton btn_offsetCH1_mais = new JButton("+");
+		btn_offsetCH1_mais.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(rdbtn_CH1.isSelected()){
+					controle.atualizaPosicaoOffset(controle.getCanal1(), 1);
+					ftf_offsetch1.setText("" + aproximador.format(controle.getCanal1().getOffset()));
+				}
 			}
 		});
-		rdbtn_AntAliasingCH2.setSelected(true);
-		rdbtn_AntAliasingCH2.setBounds(49, 18, 100, 23);
-		pnl_CH2.add(rdbtn_AntAliasingCH2);
+		btn_offsetCH1_mais.setAlignmentY(0.0f);
+		btn_offsetCH1_mais.setBounds(134, 107, 40, 14);
+		pnl_CH1.add(btn_offsetCH1_mais);
+		
+		JButton btn_offsetCH1_menos = new JButton("-");
+		btn_offsetCH1_menos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtn_CH1.isSelected()){
+					controle.atualizaPosicaoOffset(controle.getCanal1(), -1);
+					ftf_offsetch1.setText("" + aproximador.format(controle.getCanal1().getOffset()));
+				}
+			}
+		});
+		btn_offsetCH1_menos.setBounds(134, 120, 40, 14);
+		pnl_CH1.add(btn_offsetCH1_menos);
+		
+		JLabel lblPosicao = new JLabel("Posi\u00E7\u00E3o (div):");
+		lblPosicao.setBounds(6, 113, 69, 14);
+		pnl_CH1.add(lblPosicao);
+		
+		JLabel lblOffset = new JLabel("OffSet");
+		lblOffset.setBounds(6, 88, 46, 14);
+		pnl_CH1.add(lblOffset);
+		lbl_EscalaCH2.setText(Canal.escalaTensaoStr[Canal.seriesEscalaTensao.length-1]);
+		
+		JLabel lblOffset2 = new JLabel("OffSet");
+		lblOffset2.setBounds(6, 88, 46, 14);
+		pnl_CH2.add(lblOffset2);
+		
+		JLabel lblPosicao2 = new JLabel("Posi\u00E7\u00E3o (div):");
+		lblPosicao2.setBounds(6, 113, 69, 14);
+		pnl_CH2.add(lblPosicao2);
+		
+		final JFormattedTextField ftf_offsetch2 = new JFormattedTextField((Format) null);
+		ftf_offsetch2.addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent arg0) {
+				verificaDouble(arg0,ftf_offsetch2);
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER)
+				{
+					if(rdbtn_CH2.isSelected()){
+						
+						double posicao = Double.parseDouble(ftf_offsetch2.getText().replace(',', '.'));
+						if(Math.abs(posicao)<Plotter.rangePlotter){
+							controle.atualizaPosicaoOffset(controle.getCanal2(),posicao);
+						}	
+					}
+				}
+			}
+		});
+		ftf_offsetch2.setBounds(78, 110, 55, 20);
+		pnl_CH2.add(ftf_offsetch2);
+		
+		JButton btn_offsetCH2_mais = new JButton("+");
+		btn_offsetCH2_mais.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtn_CH2.isSelected()){
+					controle.atualizaPosicaoOffset(controle.getCanal2(), 1);
+					ftf_offsetch2.setText("" + aproximador.format(controle.getCanal2().getOffset()));
+				}
+			}
+		});
+		btn_offsetCH2_mais.setAlignmentY(0.0f);
+		btn_offsetCH2_mais.setBounds(134, 107, 40, 14);
+		pnl_CH2.add(btn_offsetCH2_mais);
+		
+		JButton btn_offsetCH2_menos = new JButton("-");
+		btn_offsetCH2_menos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(rdbtn_CH2.isSelected()){
+					controle.atualizaPosicaoOffset(controle.getCanal2(), -1);
+					ftf_offsetch2.setText("" + aproximador.format(controle.getCanal2().getOffset()));
+				}
+			}
+		});
+		btn_offsetCH2_menos.setBounds(134, 120, 40, 14);
+		pnl_CH2.add(btn_offsetCH2_menos);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Stop", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setLayout(null);
-		panel.setBounds(999, 142, 75, 41);
+		panel.setBounds(1010, 116, 93, 41);
 		contentPane.add(panel);
 		
 		rdbtn_Stop.addMouseListener(new MouseAdapter() {
@@ -644,18 +717,62 @@ public class FrameProjeto extends JFrame {
 		ButtonGroup grupo2 = new ButtonGroup();
 		grupo2.add(rdbtn_T1);
 		grupo2.add(rdbtn_T2);
-		rdbtn_AntAliasingCH1.setSelected(false);
-		rdbtn_AntAliasingCH2.setSelected(false);
 		rdbtn_SingleShot.setSelected(false);
 		rdbtn_Stop.setSelected(false);
 		rdbtn_T1.setEnabled(false);
 		rdbtn_T2.setEnabled(false);
 		rdbtn_Trigger.setSelected(false);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "AntAliasing", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_1.setLayout(null);
+		panel_1.setBounds(1216, 116, 104, 41);
+		contentPane.add(panel_1);
+		final JRadioButton rdbtn_AntAliasing = new JRadioButton("On");
+		rdbtn_AntAliasing.setBounds(6, 18, 50, 16);
+		panel_1.add(rdbtn_AntAliasing);
+		
+		
+		rdbtn_AntAliasing.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				controle.setAntAliasing(rdbtn_AntAliasing.isSelected());
+				controle.warnEmb();
+			}
+		});
+		
+
+		rdbtn_AntAliasing.setSelected(true);
+		rdbtn_AntAliasing.setSelected(false);
 		controle.startAll();
 		
 		
 	}
 	public ChartPanel getChartPanel(){
 		return chartPanel;
+	}
+	public void verificaDouble(KeyEvent arg0, JFormattedTextField ftf){
+		if(arg0.getKeyChar() == '.')
+		{
+			arg0.setKeyChar(',');
+		}
+		else if(arg0.getKeyChar()=='-'){
+			if(!ftf.getText().contains("-")){
+				ftf.setText("-"+ftf.getText());
+			}
+			arg0.consume();
+		}
+		else if(arg0.getKeyChar()>57||arg0.getKeyChar()<48){
+				arg0.consume();
+		}
+	}
+	public void atualizaCursores(String [] data){
+		lbl_c1_ch1.setText(data[0]);
+		lbl_c1_ch2.setText(data[1]);
+		lbl_c2_ch1.setText(data[2]);
+		lbl_c2_ch2.setText(data[3]);
+		lbl_c21_ch1.setText(data[4]);
+		lbl_c21_ch2.setText(data[5]);
+		lbl_c21_T.setText(data[6]);
 	}
 }
