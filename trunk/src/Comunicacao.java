@@ -3,7 +3,6 @@ import ch.ntb.usb.*;
 public class Comunicacao implements Runnable{
 	
 	private byte[] input;
-	private byte[] output;
 	private boolean status;	
 	private Device dev = USB.getDevice((short) 0x0483, (short) 0x5750);
 	
@@ -21,12 +20,12 @@ public class Comunicacao implements Runnable{
 	
 	public byte[] read(){
 	      // data read from the device
-	      byte[] readData = new byte[4];
+	       input = new byte[4];
 	      try 
 	      {
 			dev.open(1, 0, -1);
-			dev.readInterrupt(0x81, readData, readData.length, 2000, false);
-			return readData;
+			dev.readInterrupt(0x81, input, input.length, 2000, false);
+			return input;
 	      }
 	      catch (USBException e) {
 			// TODO Auto-generated catch block
@@ -35,11 +34,11 @@ public class Comunicacao implements Runnable{
 		return null;
 	}
 
-	public void write(byte [] b){
+	public void write(byte [] output){
 	    try 
 	    {
 	        dev.open(1, 0, -1);
-			dev.writeInterrupt(0x81, b, b.length, 2000, false);
+			dev.writeInterrupt(0x81, output, output.length, 2000, false);
 		} 
 	    catch (USBException e)
 	    {
