@@ -48,6 +48,15 @@ public class Comunicacao implements Runnable{
 	}
 	
 	public boolean getStatus(){
+		  try 
+		    {
+		        dev.open(1, 0, -1);
+		        status = true; //USB Ok
+			} 
+		    catch (USBException e)
+		    {
+		    	status = false;//USB não está OK
+			}
 		return status;
 	}
 	
