@@ -10,8 +10,7 @@ public class Controle implements Runnable{
 	private boolean singleShot;
 	private boolean stop;
 	private boolean antAliasing;
-	
-	private boolean changed;
+	private boolean warnEmb;
 	
 	private Plotter plotter;
 	private Comunicacao comunicacao;
@@ -44,6 +43,7 @@ public class Controle implements Runnable{
 		stop = false;
 		statusPlotar = false;
 		antAliasing = false;
+		warnEmb = false;
 		
 		//Objetos teste.
 		g1 = new GeradorDeFuncoes();
@@ -88,13 +88,27 @@ public class Controle implements Runnable{
 							e.printStackTrace();
 						}
 					}
+					if(Canal.changed ){
+						plotter.clearSeriesBuffers(3);
+						Canal.changed = false;
+					}
+					if(ch1.isChanged()){
+						plotter.clearSeriesBuffers(1);
+						ch1.resetConfigMudada();
+					}
+					if( ch2.isChanged()){
+						plotter.clearSeriesBuffers(2);
+						ch2.resetConfigMudada();
+					}
 					if(!statusPlotar){
 						if(uc.getStatus()){
 			        		ch1.setDataComunicacao(uc.read());
 							uc.setStatus(false);
 							statusPlotar = true;
 						}
+						
 						atualizaLabelCursores();
+						atualizaLabelCanais();
 					}
 					Monitor.M_C.livre = true;
 					Monitor.M_C.notifyAll();
@@ -115,7 +129,7 @@ public class Controle implements Runnable{
 	}
 	
 	public void warnEmb(){
-		changed = true;
+		
 	}
 	
 	
@@ -152,16 +166,9 @@ public class Controle implements Runnable{
 		trigger.setCanal(ch);
 	}
 	
-	public void setCanal(int numCanal, boolean ativo){
-		if(numCanal == 1 ){
-			if(ativo == false){
-				plotter.clearSeriesBuffers(1);
-			}
-			ch1.select(ativo);
-		}
-		else{
-			ch2.select(ativo);
-		}
+	public void setCanal(Canal ch, boolean ativo){
+		ch.configMudada();
+		ch.select(ativo);
 	}
 	
 	public String atualizaEscalaTensao(Canal ch, int sentido){
@@ -172,6 +179,7 @@ public class Controle implements Runnable{
 			ch.setEscalaTensao(Canal.seriesEscalaTensao.length-1);
 		}
 		else{
+			ch.configMudada();
 			ch.setEscalaTensao((ch.getEscalaTensao() + sentido));
 			if(ch==ch1){
 				//plotter.clearSeriesBuffers(1);
@@ -183,16 +191,19 @@ public class Controle implements Runnable{
 		
 		//esse metodos vao mudar, na real .
 		if(ch.getEscalaTensao()<=Canal.baixaTensao){
+			warnEmb = true;
 			uc.getSAD().setAmplifica(true);
 			uc.getSAD().setAtenua(false);
 			ch.configCanal(true, false);
 		}
 		else if(ch.getEscalaTensao()>=Canal.altaTensao){
+			warnEmb = true;
 			uc.getSAD().setAmplifica(false);
 			uc.getSAD().setAtenua(true);
 			ch.configCanal(false, true);
 		}
 		else{
+			warnEmb = true;
 			uc.getSAD().setAmplifica(false);
 			uc.getSAD().setAtenua(false);
 			ch.configCanal(false, false);
@@ -202,6 +213,7 @@ public class Controle implements Runnable{
 	}
 		
 	public String atualizaEscalaTempo(int sentido){
+		//warnEmb = true;
 		int escalaTempoAnterior = Canal.escalaTempo;
 		if(Canal.escalaTempo ==0 && sentido == -1 ){
 			Canal.escalaTempo = 0;
@@ -210,6 +222,7 @@ public class Controle implements Runnable{
 			Canal.escalaTempo = Canal.seriesEscalaTempo.length-1;
 		}
 		else{
+			Canal.changed=true;
 			Canal.escalaTempo = Canal.escalaTempo + sentido;
 			//plotter.clearSeriesBuffers(3);
 		}
@@ -275,7 +288,14 @@ public class Controle implements Runnable{
 	public void setStop(boolean ativo){
 		stop = ativo;
 	}
-
+	public void stopPlotter(){
+		if(!stop){
+			Canal.changed=true;
+		}
+	}
+	public void singleShotPlotter(){
+		
+	}
 	public void setAntAliasing(boolean ativo){
 		antAliasing = ativo;
 	}
@@ -317,9 +337,11 @@ public class Controle implements Runnable{
 		return frameProjeto;
 	}
 	public void atualizaPosicaoOffset(Canal ch, double posicao){
+		ch.configMudada();
 		ch.setOffset(posicao);
 	}
 	public void atualizaPosicaoOffset(Canal ch, int sentido){
+		ch.configMudada();
 		double temp = ch.getOffset()+sentido*(Plotter.rangePlotter/250.0);
 		if(Math.abs(temp)<Plotter.rangePlotter){
 			ch.setOffset(temp);
@@ -329,26 +351,40 @@ public class Controle implements Runnable{
 		String [] s = {"","","","","","",""};
 		if(Cursor.ativo){
 			
-			double c1ch1 = ch1.getTensao(cursor1.getPosicao()) * Canal.seriesEscalaTensao[ch1.getEscalaTensao()];
-			//double c1ch2 = ch2.getTensao(cursor1.getPosicao()) * Canal.seriesEscalaTensao[ch2.getEscalaTensao()];
-			
-			double c2ch1 = ch1.getTensao(cursor2.getPosicao()) * Canal.seriesEscalaTensao[ch1.getEscalaTensao()];
-			//double c2ch2 = ch2.getTensao(cursor2.getPosicao()) * Canal.seriesEscalaTensao[ch2.getEscalaTensao()];
-			
+			double c1ch1 = cursor1.getDados(ch1);
+			//double c1ch2 = 
+			double c2ch1 = cursor2.getDados(ch2);
+			//double c2ch2 = 
 			double c21ch1 = c2ch1-c1ch1;
 			//double c21ch2 = c2ch2-c1ch2;
 			
 			double tempo = (cursor2.getPosicao() - cursor1.getPosicao())*Canal.seriesEscalaTempo[Canal.escalaTempo];
 			
 			s[0] = Converter.converteUnidadeTensao(c1ch1);
-			//s[1] = testaUnidadeTensao(c1ch2);
+			//s[1] = 
 			s[2] = Converter.converteUnidadeTensao(c2ch1);
-			//s[3] = testaUnidadeTensao(c2ch2);
+			//s[3] = 
 			s[4] = Converter.converteUnidadeTensao(c21ch1);
-			//s[5] = testaUnidadeTensao(c21ch2);
+			//s[5] = 
 			s[6] = Converter.converteUnidadeTempo(tempo);
 			
 		}
 		frameProjeto.atualizaCursores(s);
+	}
+	public void atualizaLabelCanais(){
+		String [] s = {"","","","","","",""};
+		if(ch1.isEnable()){
+			
+			s[0] = Converter.converteUnidadeTensao(ch1.calcTensaoRMS());
+			s[1] = Converter.converteUnidadeTensao(ch1.calcTensaoPP());
+			s[2] = Converter.converteUnidadeFrequencia(ch1.calcFrequencia());
+			
+		}
+		if(ch2.isEnable()){
+			//s[3] = Converter.converteUnidadeTensao(ch1.calcTensaoRMS());
+			//s[4] = Converter.converteUnidadeTensao(ch1.calcTensaoPP());
+			//s[5] = Converter.converteUnidadeFrequencia(ch1.calcFrequencia());
+		}
+		frameProjeto.atualizaCanais(s);
 	}
 }

@@ -30,8 +30,8 @@ public class Cursor{
 		return marker.getValue();
 	}
 	
-	public double[] getDados(Canal ch1, Canal ch2){
-		return null;
+	public double getDados(Canal ch){
+		return ch.getTensao(getPosicao());
 	}
 	
 	public void select (boolean ativo){
