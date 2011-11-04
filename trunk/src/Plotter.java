@@ -31,7 +31,7 @@ public class Plotter implements Runnable{
 	private int serieAtualCH1;
 	private int serieAtualCH2;
 
-	
+
 	public Plotter(Controle c){
 		controle = c;
 		
@@ -42,7 +42,6 @@ public class Plotter implements Runnable{
 			seriesCH1[i] = new XYSeries(" ");
 			seriesCH2[i] = new XYSeries(" ");
 		}
-		
         XYItemRenderer renderer = new StandardXYItemRenderer();//SamplingXYLineRenderer();
         
         NumberAxis rangeAxis = new NumberAxis("Tensão");
@@ -100,8 +99,9 @@ public class Plotter implements Runnable{
 		double posTrigger;
 		double posAtual;
 		
+		ch.setSeries(series[serieAtual]);
 		//Com buffer.
-		if(Canal.escalaTempo<=4){
+		if(Canal.escalaTempo<=Canal.realTime){
 			for(int i = 0 ; i < microControlador.bufferuC; i++)
 			{
 				dataOld = Double.MAX_VALUE;
@@ -170,17 +170,21 @@ public class Plotter implements Runnable{
 		case 1:
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH1[i].clear();
+				ch1.setPosTempo(-rangePlotter);
 			}
 			break;
 		case 2:
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH2[i].clear();
+				ch2.setPosTempo(-rangePlotter);
 			}
 			break;
 		case 3:
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH1[i].clear();
 				seriesCH2[i].clear();
+				ch1.setPosTempo(-rangePlotter);
+				ch2.setPosTempo(-rangePlotter);
 			}
 			break;
 		}

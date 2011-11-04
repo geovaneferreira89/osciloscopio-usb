@@ -58,23 +58,27 @@ public class FrameProjeto extends JFrame {
 	}
 	Controle controle;
 	private ChartPanel chartPanel;
-	private JLabel lbl_c1_ch1 = new JLabel("0.00 V");
-	private JLabel lbl_c1_ch2 = new JLabel("0.00 V");
-	private JLabel lbl_c2_ch1 = new JLabel("0.00 V");
-	private JLabel lbl_c2_ch2 = new JLabel("0.00 V");
-	private JLabel lbl_c12_ch1 = new JLabel("0.00 V");
+	private JLabel lbl_c1_ch1;
+	private JLabel lbl_c1_ch2;
+	private JLabel lbl_c2_ch1;
+	private JLabel lbl_c2_ch2;
 	private JLabel lbl_c21_ch1;
-	private JLabel lbl_c12_ch2 = new JLabel("0.00 V");
 	private JLabel lbl_c21_ch2;
-	private JLabel lbl_c12_T = new JLabel("0.00 s");
 	private JLabel lbl_c21_T;
+	private JLabel lbl_RMSCH1;
+	private JLabel lbl_PPCH1;
+	private JLabel lbl_FRQCH1;
+	private JLabel lbl_FRQCH2;
+	private JLabel lbl_PPCH2;
+	private JLabel lbl_RMSCH2;
+	
 	
 	public FrameProjeto() throws ParseException  {
 		
 		// Frame Principal
 		setTitle("Oscilosc\u00F3pio ");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(1346,750);
+		setSize(1154,750);
 		setResizable(true);
 		controle = new Controle(this);
         
@@ -101,16 +105,10 @@ public class FrameProjeto extends JFrame {
 		JLabel lbl_rms1 = new JLabel("Tens\u00E3o RMS:");
 		JLabel lbl_pp1 = new JLabel("Tens\u00E3o Pico \u00E0 Pico:");
 		JLabel lbl_frq1 = new JLabel("Frequ\u00EAncia:");
-		JLabel lbl_RMSCH1 = new JLabel("000 mV");
-		JLabel lbl_PPCH1 = new JLabel("000 mV");
-		JLabel lbl_FRQCH1 = new JLabel("0000 Hz");
 		final JLabel lbl_EscalaCH2 = new JLabel("2 mV / div");
 		JLabel label = new JLabel("Tens\u00E3o RMS:");
 		JLabel label_1 = new JLabel("Tens\u00E3o Pico \u00E0 Pico:");
 		JLabel label_2 = new JLabel("Frequ\u00EAncia:");
-		JLabel lbl_FRQCH2 = new JLabel("0000 Hz");
-		JLabel lbl_PPCH2 = new JLabel("0000 mV");
-		JLabel lbl_RMSCH2 = new JLabel("0000 mV");
 		JLabel lbl_Tempo = new JLabel("Tempo");
 		final JLabel lbl_EscalaBT = new JLabel();
 		JLabel lblEscala = new JLabel("Escala:");
@@ -128,13 +126,21 @@ public class FrameProjeto extends JFrame {
 		JLabel label_15 = new JLabel("Tempo");
 		JLabel lblTensao = new JLabel("Posi\u00E7\u00E3o (div):");
 		JSeparator separator = new JSeparator();
-		lbl_c1_ch2 = new JLabel("0.00 V");
-		lbl_c1_ch1 = new JLabel("0.00 V");
-		lbl_c2_ch1 = new JLabel("0.00 V");
-		lbl_c2_ch2 = new JLabel("0.00 V");
-		lbl_c21_ch1 = new JLabel("0.00 V");
-		lbl_c21_ch2 = new JLabel("0.00 V");
-		lbl_c21_T = new JLabel("0.00 s");
+		lbl_c1_ch2 = new JLabel();
+		lbl_c1_ch1 = new JLabel();
+		lbl_c2_ch1 = new JLabel();
+		lbl_c2_ch2 = new JLabel();
+		lbl_c21_ch1 = new JLabel();
+		lbl_c21_ch2 = new JLabel();
+		lbl_c21_T = new JLabel();
+		
+		lbl_RMSCH1 = new JLabel();
+		lbl_PPCH1 = new JLabel();
+		lbl_FRQCH1 = new JLabel();
+		lbl_FRQCH2 = new JLabel();
+		lbl_PPCH2 = new JLabel();
+		lbl_RMSCH2 = new JLabel();
+		
 		
 		// JRadioButton
 		final JRadioButton rdbtn_CH1 = new JRadioButton("On");
@@ -169,6 +175,7 @@ public class FrameProjeto extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				controle.setSingleShot(rdbtn_SingleShot.isSelected());
+				controle.singleShotPlotter();
 				rdbtn_Stop.setSelected(false);
 				controle.setStop(false);
 			}
@@ -180,7 +187,7 @@ public class FrameProjeto extends JFrame {
 		contentPane.setLayout(null);
 		
 		pnl_Plotter.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), "", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnl_Plotter.setBounds(10, 11, 990, 692);
+		pnl_Plotter.setBounds(10, 11, 800, 514);
 		contentPane.add(pnl_Plotter);
 		pnl_Plotter.setLayout(null);
 		
@@ -188,7 +195,7 @@ public class FrameProjeto extends JFrame {
         
 		chartPanel = new ChartPanel(chart);
 
-		chartPanel.setBounds(10, 51, 970, 630);
+		chartPanel.setBounds(10, 51, 780, 452);
 		pnl_Plotter.add(chartPanel);
 		chartPanel.setBackground(Color.GRAY);
 		chartPanel.setLayout(new GridLayout(0, 1, 0, 0));
@@ -199,7 +206,7 @@ public class FrameProjeto extends JFrame {
 	
 		
 		lbl_UsbStatus.setForeground(Color.RED);
-		lbl_UsbStatus.setBounds(730, 11, 100, 16);
+		lbl_UsbStatus.setBounds(690, 11, 100, 16);
 		pnl_Plotter.add(lbl_UsbStatus);
 		
 		//Botoes
@@ -216,7 +223,7 @@ public class FrameProjeto extends JFrame {
 			
 		});
 		
-		pnl_CH1.setBounds(1010, 168, 310, 145);
+		pnl_CH1.setBounds(820, 170, 310, 145);
 		contentPane.add(pnl_CH1);
 		pnl_CH1.setBorder(new TitledBorder(null, "Canal 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_CH1.setLayout(null);
@@ -258,16 +265,16 @@ public class FrameProjeto extends JFrame {
 		lbl_frq1.setBounds(208, 102, 57, 14);
 		pnl_CH1.add(lbl_frq1);
 		
-		lbl_RMSCH1.setBounds(208, 32, 46, 14);
+		lbl_RMSCH1.setBounds(208, 32, 92, 14);
 		pnl_CH1.add(lbl_RMSCH1);
 		
-		lbl_PPCH1.setBounds(208, 72, 46, 14);
+		lbl_PPCH1.setBounds(208, 72, 92, 14);
 		pnl_CH1.add(lbl_PPCH1);
 		
-		lbl_FRQCH1.setBounds(208, 116, 46, 14);
+		lbl_FRQCH1.setBounds(208, 116, 92, 14);
 		pnl_CH1.add(lbl_FRQCH1);
 		
-		pnl_CH2.setBounds(1010, 326, 310, 145);
+		pnl_CH2.setBounds(820, 326, 310, 145);
 		contentPane.add(pnl_CH2);
 		pnl_CH2.setBorder(new TitledBorder(null, "Canal 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_CH2.setLayout(null);
@@ -309,17 +316,17 @@ public class FrameProjeto extends JFrame {
 		label_2.setBounds(208, 102, 57, 14);
 		pnl_CH2.add(label_2);
 		
-		lbl_FRQCH2.setBounds(208, 116, 46, 14);
+		lbl_FRQCH2.setBounds(208, 116, 92, 14);
 		pnl_CH2.add(lbl_FRQCH2);
 		
-		lbl_PPCH2.setBounds(208, 72, 46, 14);
+		lbl_PPCH2.setBounds(208, 72, 92, 14);
 		pnl_CH2.add(lbl_PPCH2);
 		
-		lbl_RMSCH2.setBounds(208, 32, 46, 14);
+		lbl_RMSCH2.setBounds(208, 32, 92, 14);
 		pnl_CH2.add(lbl_RMSCH2);
 		
 		panel_BT.setBorder(new TitledBorder(null, "Base de Tempo", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_BT.setBounds(1010, 482, 310, 78);
+		panel_BT.setBounds(820, 482, 310, 78);
 		contentPane.add(panel_BT);
 		panel_BT.setLayout(null);
 		
@@ -346,7 +353,7 @@ public class FrameProjeto extends JFrame {
 		panel_BT.add(lbl_EscalaBT);
 
 		panel_Cursores.setBorder(new TitledBorder(null, "Cursores", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_Cursores.setBounds(1010, 571, 310, 132);
+		panel_Cursores.setBounds(820, 571, 310, 132);
 		contentPane.add(panel_Cursores);
 		panel_Cursores.setLayout(null);
 		
@@ -404,13 +411,13 @@ public class FrameProjeto extends JFrame {
 		rdbtn_CH2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controle.setCanal(2, rdbtn_CH1.isSelected());
+				controle.setCanal(controle.getCanal2(), rdbtn_CH2.isSelected());
 			}
 		});
 		rdbtn_CH1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				controle.setCanal(1, rdbtn_CH1.isSelected());
+				controle.setCanal(controle.getCanal1(), rdbtn_CH1.isSelected());
 			}
 		});
 		
@@ -471,7 +478,7 @@ public class FrameProjeto extends JFrame {
 		
 		pnl_trigger.setBorder(new TitledBorder(null, "Trigger", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnl_trigger.setLayout(null);
-		pnl_trigger.setBounds(1010, 11, 310, 94);
+		pnl_trigger.setBounds(820, 11, 310, 94);
 		contentPane.add(pnl_trigger);
 	
 		rdbtn_T1.setSelected(true);
@@ -488,7 +495,7 @@ public class FrameProjeto extends JFrame {
 		
 		panel_singleShot.setBorder(new TitledBorder(null, "SingleShot", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_singleShot.setLayout(null);
-		panel_singleShot.setBounds(1113, 116, 93, 41);
+		panel_singleShot.setBounds(923, 116, 93, 41);
 		contentPane.add(panel_singleShot);
 		
 
@@ -693,13 +700,14 @@ public class FrameProjeto extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Stop", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel.setLayout(null);
-		panel.setBounds(1010, 116, 93, 41);
+		panel.setBounds(820, 116, 93, 41);
 		contentPane.add(panel);
 		
 		rdbtn_Stop.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				controle.setStop(rdbtn_Stop.isSelected());
+				controle.stopPlotter();
 				rdbtn_SingleShot.setSelected(false);
 				controle.setSingleShot(false);
 			}
@@ -726,7 +734,7 @@ public class FrameProjeto extends JFrame {
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "AntAliasing", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.setLayout(null);
-		panel_1.setBounds(1216, 116, 104, 41);
+		panel_1.setBounds(1026, 116, 104, 41);
 		contentPane.add(panel_1);
 		final JRadioButton rdbtn_AntAliasing = new JRadioButton("On");
 		rdbtn_AntAliasing.setBounds(6, 18, 50, 16);
@@ -774,5 +782,13 @@ public class FrameProjeto extends JFrame {
 		lbl_c21_ch1.setText(data[4]);
 		lbl_c21_ch2.setText(data[5]);
 		lbl_c21_T.setText(data[6]);
+	}
+	public void atualizaCanais(String [] data){
+		lbl_RMSCH1.setText(data[0]);
+		lbl_PPCH1.setText(data[1]);
+		lbl_FRQCH1.setText(data[2]);
+		lbl_RMSCH2.setText(data[3]);
+		lbl_PPCH2.setText(data[4]);
+		lbl_FRQCH2.setText(data[5]);		
 	}
 }

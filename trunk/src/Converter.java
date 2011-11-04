@@ -23,12 +23,18 @@ public class Converter{
 	}
 	
 	public static String converteUnidadeTensao(double tensao){
+		if(tensao == 0.0){
+			return "";
+		}
 		if(Math.abs(tensao) < 0.5){
 			return aproximador.format(tensao*1000) + " mV";
 		}
 		return aproximador.format(tensao)+" V";
 	}
 	public static String converteUnidadeTempo(double tempo){
+		if(tempo == 0.0){
+			return "";
+		}
 		if(Math.abs(tempo) < 1 && Math.abs(tempo) > 0.001 ){
 			return aproximador.format(tempo*1000) + " ms";
 		}
@@ -36,5 +42,14 @@ public class Converter{
 			return aproximador.format(tempo*1000*1000) + " us";
 		}
 		return aproximador.format(Math.abs(tempo))+ " s";
+	}
+	public static String converteUnidadeFrequencia(double frequencia){
+		if(frequencia == 0.0){
+			return "";
+		}
+		if(Math.abs(frequencia) > 10000){
+			return aproximador.format(frequencia/10000) + " kHz";
+		}
+		return aproximador.format(Math.abs(frequencia))+ " Hz";
 	}
 }
