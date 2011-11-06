@@ -1,6 +1,7 @@
 import java.text.DecimalFormat;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.XYPlot;
@@ -125,6 +126,10 @@ public class Controle implements Runnable{
 		return statusPlotar;
 	}
 	public void conectarUSB(){
+		//protCom.configPacote(true, antAliasing, cursor1, cursor2);
+		protCom.configPacote(true, antAliasing, 1, 1);
+		comunicacao.write(null);
+		JOptionPane.showMessageDialog( frameProjeto, "Conectando... ");
 		
 	}
 	
