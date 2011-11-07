@@ -99,7 +99,7 @@ public class FrameProjeto extends JFrame {
 		JButton btn_CH2_Mais = new JButton("+");
 		
 		//Labels
-		JLabel lbl_UsbStatus = new JLabel("USB: N\u00E3o Conectada");
+	    final JLabel lbl_UsbStatus = new JLabel("USB: N\u00E3o Conectada");
 		JLabel lblEscala_1 = new JLabel("Escala:");
 		final JLabel lbl_EscalaCH1 = new JLabel("2 mV / div");
 		JLabel lbl_rms1 = new JLabel("Tens\u00E3o RMS:");
@@ -209,7 +209,7 @@ public class FrameProjeto extends JFrame {
 		lbl_UsbStatus.setBounds(690, 11, 100, 16);
 		pnl_Plotter.add(lbl_UsbStatus);
 		
-		//Botoes
+		//Botões
 		JButton btn_ConectarUSB = new JButton("Iniciar Conex\u00E3o");
 		btn_ConectarUSB.setBounds(16, 11, 107, 29);
 		pnl_Plotter.add(btn_ConectarUSB);
@@ -217,7 +217,13 @@ public class FrameProjeto extends JFrame {
 			
 			public void mouseClicked(MouseEvent arg0)
 			{
-				controle.conectarUSB();
+				if(controle.conectarUSB() == true){
+					lbl_UsbStatus.setText("USB: Conectada");
+				}
+				else{
+					lbl_UsbStatus.setText("USB: N\u00E3o Conectada");
+				}
+					
 			}
 			
 		});
