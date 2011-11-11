@@ -1,3 +1,4 @@
+import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 
 import Testes.microControlador;
@@ -62,7 +63,16 @@ public class Canal {
 	}
 	
 	public double calcTensaoRMS(){
-		return 0.0;
+		if(serie != null){
+			double rms = 0;
+			for(int i=1; i < serie.getItemCount(); i++){
+				rms = rms + Math.pow((Double) serie.getY(i),2) + Math.pow((Double) serie.getX(i),2);
+			}
+			rms = Math.sqrt(rms/serie.getItemCount());
+			return rms;
+		}
+		else
+			return 0.0;
 	}
 	
 	public double calcTensaoPP(){
