@@ -69,7 +69,7 @@ public class Canal {
 				rms = rms + Math.pow((Double) serie.getY(i),2) + Math.pow((Double) serie.getX(i),2);
 			}
 			rms = Math.sqrt(rms/serie.getItemCount());
-			return rms;
+			return rms * Canal.seriesEscalaTensao[this.getEscalaTensao()];
 		}
 		else
 			return 0.0;
