@@ -63,7 +63,7 @@ public class Canal {
 	}
 	
 	public double calcTensaoRMS(){
-		if(serie != null){
+		if(serie != null && !serie.isEmpty()){
 			double rms = 0;
 			for(int i=1; i < serie.getItemCount(); i++){
 				rms = rms + Math.pow((Double) serie.getY(i),2) + Math.pow((Double) serie.getX(i),2);
