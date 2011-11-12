@@ -76,7 +76,7 @@ public class Canal {
 	}
 	
 	public double calcTensaoPP(){
-		if(serie != null){
+		if(serie != null && !serie.isEmpty()){
 			return (serie.getMaxY()-serie.getMinY())* Canal.seriesEscalaTensao[this.getEscalaTensao()];
 		}
 		return 0.0;
@@ -91,13 +91,14 @@ public class Canal {
 	}
 	
 	public double getTensao(double tempo){
-		if(serie != null){
+		if(serie != null && !serie.isEmpty()){
 			double anteriorY;
 			double proximoY;
 			double anteriorX;
 			double proximoX;
 			
 			for(int i = 1 ; i < serie.getItemCount() ;i++){
+				
 				anteriorY = (Double) serie.getY(i-1);
 				proximoY = (Double) serie.getY(i);
 				anteriorX = (Double) serie.getX(i-1);
