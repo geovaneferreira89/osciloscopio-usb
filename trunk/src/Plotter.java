@@ -126,6 +126,8 @@ public class Plotter implements Runnable{
 						posTempo = -rangePlotter;
 						collection.removeSeries(series[serieAtual]);
 						series[serieAtual].clear();
+						series[serieAtual].clear();
+						series[serieAtual].clear();
 						serieAtual = (serieAtual+1)%tamBufferSeries;
 						ch.setSeries(series[serieAtual]);
 						collection.addSeries(series[serieAtual]);
@@ -155,6 +157,8 @@ public class Plotter implements Runnable{
 					posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
 					if(posTempo >rangePlotter){
 						posTempo = -rangePlotter;
+						series[serieAtual].clear();
+						series[serieAtual].clear();
 						series[serieAtual].clear();
 						ch.setSeries(series[serieAtual]);
 					}
