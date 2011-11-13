@@ -7,6 +7,7 @@ import jfreedsp.math.DSP;
 import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 
+import Testes.GeradorDeFuncoes;
 import Testes.microControlador;
 
 public class Canal {
@@ -38,7 +39,7 @@ public class Canal {
 	public final static int baixaTensao = 2;
 	public final static int altaTensao = 4;
 	
-	public final static int realTime = 3;
+	public final static int realTime = 4;
 	
 	public static boolean changed = false;
 	private boolean changedEsp;
@@ -46,7 +47,7 @@ public class Canal {
 	
 	public Canal(int numCanal){
 		dataComunicacao = new int[microControlador.bufferuC];
-		posTempo = -Plotter.rangePlotter;
+		posTempo = 0;
 		escalaTempo = 0;
 		changed = false;
 		changedEsp = false;
@@ -86,7 +87,7 @@ public class Canal {
 		}
 		return 0.0;
 	}
-	public void clearRMS(){
+	public void clear_RMS_FREQ(){
 		tRMS = 0;
 		lastRMS = 0;
 	}
@@ -116,7 +117,7 @@ public class Canal {
 				}
 			}
 			//Freq Amostragem = 1000;
-			return (1000 * maxi) / (2 * dft.length);
+			return (GeradorDeFuncoes.frequenciaAmostragem * maxi) / (2 * dft.length);
 		}
 		return 0.0;
 	}         
@@ -201,7 +202,7 @@ public class Canal {
 		this.posTempo = posTempo;
 	}
 	public void clearPosTempo(){
-		posTempo = -Plotter.rangePlotter;
+		posTempo = 0;
 	}
 	public boolean isChanged(){
 		return changedEsp;
