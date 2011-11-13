@@ -51,6 +51,7 @@ public class Controle implements Runnable {
 		g1 = new GeradorDeFuncoes();
 		g1.setAmplitude(10);
 		g1.setFrequencia(1);
+		g1.setRuido(0.1);
 		g1.setEstado(GeradorDeFuncoes.SENOIDE);
 		uc = new microControlador(g1);
 
@@ -273,13 +274,8 @@ public class Controle implements Runnable {
 	}
 
 	public void atualizaPosCursores(double posicao) {
-		double xval = plotter
-				.getPlot()
-				.getDomainAxis()
-				.java2DToValue(
-						posicao,
-						frameProjeto.getChartPanel().getChartRenderingInfo()
-								.getPlotInfo().getDataArea(),
+		double xval = plotter.getPlot().getDomainAxis().java2DToValue(
+						posicao,frameProjeto.getChartPanel().getChartRenderingInfo()								.getPlotInfo().getDataArea(),
 						plotter.getPlot().getDomainAxisEdge());
 		if (cursor1.isEnable()) {
 			cursor1.setPosicao(xval);
@@ -375,7 +371,7 @@ public class Controle implements Runnable {
 
 			double c1ch1 = cursor1.getDados(ch1);
 			// double c1ch2 =
-			double c2ch1 = cursor2.getDados(ch2);
+			double c2ch1 = cursor2.getDados(ch1);
 			// double c2ch2 =
 			double c21ch1 = c2ch1 - c1ch1;
 			// double c21ch2 = c2ch2-c1ch2;

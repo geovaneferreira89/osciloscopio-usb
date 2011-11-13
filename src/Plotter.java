@@ -52,9 +52,9 @@ public class Plotter implements Runnable{
         
         NumberAxis domainAxis = new NumberAxis("Tempo");
         domainAxis.setAutoRange(false);
-        domainAxis.setRange(-rangePlotter, rangePlotter);
+        domainAxis.setRange(0, 2*rangePlotter);
         domainAxis.setAutoTickUnitSelection(false);
-        domainAxis.centerRange(0);
+        domainAxis.centerRange(rangePlotter);
         
         collection = new XYSeriesCollection();
         plot = new XYPlot(collection, domainAxis, rangeAxis, renderer);
@@ -108,7 +108,7 @@ public class Plotter implements Runnable{
 				if(i>1){
 					dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
 				}
-				if(posTempo==-rangePlotter && controle.getTrigger().isEnable() && controle.getTrigger().getCanal()==ch){
+				if(posTempo==0&& controle.getTrigger().isEnable() && controle.getTrigger().getCanal()==ch){
 					posTrigger = controle.getTrigger().getPosicao(); 
 					posAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
 					if(posAtual>dataOld && posTrigger<=posAtual && posTrigger>=dataOld){
@@ -121,10 +121,11 @@ public class Plotter implements Runnable{
 				else{
 					series[(serieAtual+tamBufferSeries-1) % tamBufferSeries].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset());
 					posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
-					if(posTempo > rangePlotter+(1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo]){
+					if(posTempo > 2*rangePlotter+(1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo]){
 						
-						posTempo = -rangePlotter;
+						posTempo = 0;
 						collection.removeSeries(series[serieAtual]);
+						ch.clearRMS();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
@@ -142,7 +143,7 @@ public class Plotter implements Runnable{
 				if(i>1){
 					dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
 				}
-				if(posTempo==-rangePlotter && controle.getTrigger().isEnable() && controle.getTrigger().getCanal()==ch){
+				if(posTempo==0 && controle.getTrigger().isEnable() && controle.getTrigger().getCanal()==ch){
 					
 					posTrigger = controle.getTrigger().getPosicao(); 
 					posAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
@@ -155,8 +156,9 @@ public class Plotter implements Runnable{
 				else{
 					series[serieAtual].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i])+ch.getOffset());
 					posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
-					if(posTempo >rangePlotter){
-						posTempo = -rangePlotter;
+					if(posTempo >2*rangePlotter){
+						posTempo = 0;
+						ch.clearRMS();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
@@ -174,21 +176,21 @@ public class Plotter implements Runnable{
 		case 1:
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH1[i].clear();
-				ch1.setPosTempo(-rangePlotter);
+				ch1.setPosTempo(0);
 			}
 			break;
 		case 2:
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH2[i].clear();
-				ch2.setPosTempo(-rangePlotter);
+				ch2.setPosTempo(0);
 			}
 			break;
 		case 3:
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH1[i].clear();
 				seriesCH2[i].clear();
-				ch1.setPosTempo(-rangePlotter);
-				ch2.setPosTempo(-rangePlotter);
+				ch1.setPosTempo(0);
+				ch2.setPosTempo(0);
 			}
 			break;
 		}
@@ -204,7 +206,7 @@ public class Plotter implements Runnable{
 	}
 	public void configDomainMarker(){
 		ValueMarker marker;
-		marker = new ValueMarker(0);
+		marker = new ValueMarker(3);
 		marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.black, 4.0f, 4.0f, Color.black));
 		plot.addDomainMarker(marker);
 	}

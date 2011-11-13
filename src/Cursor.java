@@ -12,7 +12,7 @@ public class Cursor{
 	
 	public Cursor(int numCursor){
 		
-		marker = new ValueMarker(0);
+		marker = new ValueMarker(3);
 		if(numCursor == 2){
 			marker.setPaint(new GradientPaint(1.0f, 2.0f, Color.green, 3.0f, 4.0f, Color.red));
 		}
@@ -31,7 +31,7 @@ public class Cursor{
 	}
 	
 	public double getDados(Canal ch){
-		return ch.getTensao(getPosicao());
+		return ch.getTensaoCursor(this);
 	}
 	
 	public void select (boolean ativo){

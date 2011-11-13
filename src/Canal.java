@@ -24,6 +24,10 @@ public class Canal {
 	private int [] dataComunicacao;
 	private double posTempo;
 	
+	
+	private double tRMS;
+	private int lastRMS;
+	
 	// Informam na matrix seriesEscalaTensao e escalaTensaoStr as posições (index) 
 	// onde ocorrem atenuacao/amp no sinal respectivamente:
 	public final static int baixaTensao = 2;
@@ -33,6 +37,7 @@ public class Canal {
 	
 	public static boolean changed = false;
 	private boolean changedEsp;
+
 	
 	public Canal(int numCanal){
 		dataComunicacao = new int[microControlador.bufferuC];
@@ -48,6 +53,8 @@ public class Canal {
 		amplifica = false;
 		atenua = true;
 		
+		tRMS = 0;
+		lastRMS = 0;
 	}
 	
 	public void setDataComunicacao(int dataComunicacao[]){
@@ -64,17 +71,21 @@ public class Canal {
 	
 	public double calcTensaoRMS(){
 		if(serie != null && !serie.isEmpty()){
-			double rms = 0;
-			for(int i=1; i < serie.getItemCount(); i++){
-				rms = rms + Math.pow((Double) serie.getY(i),2) + Math.pow((Double) serie.getX(i),2);
+			double rms = tRMS;
+			for(int i= lastRMS; i < serie.getItemCount(); i++){
+				rms += Math.pow((Double) serie.getY(i)*Canal.seriesEscalaTensao[this.getEscalaTensao()],2);
 			}
+			lastRMS = serie.getItemCount();
+			tRMS = rms;
 			rms = Math.sqrt(rms/serie.getItemCount());
-			return rms * Canal.seriesEscalaTensao[this.getEscalaTensao()];
+			return rms;
 		}
-		else
-			return 0.0;
+		return 0.0;
 	}
-	
+	public void clearRMS(){
+		tRMS = 0;
+		lastRMS = 0;
+	}
 	public double calcTensaoPP(){
 		if(serie != null && !serie.isEmpty()){
 			return (serie.getMaxY()-serie.getMinY())* Canal.seriesEscalaTensao[this.getEscalaTensao()];
@@ -90,30 +101,48 @@ public class Canal {
 		this.serie = serie;
 	}
 	
-	public double getTensao(double tempo){
+	public double getTensaoCursor(Cursor c){
 		if(serie != null && !serie.isEmpty()){
-			double anteriorY;
-			double proximoY;
-			double anteriorX;
-			double proximoX;
-			
-			for(int i = 1 ; i < serie.getItemCount() ;i++){
-				
-				anteriorY = (Double) serie.getY(i-1);
-				proximoY = (Double) serie.getY(i);
-				anteriorX = (Double) serie.getX(i-1);
-				proximoX = (Double) serie.getX(i);
-				
-				if(anteriorX < tempo && proximoX > tempo){
-					double m = (anteriorY-proximoY)/proximoX-proximoY;
-					double b = -m*anteriorX +anteriorY;
-					return (m*tempo+b) * Canal.seriesEscalaTensao[this.getEscalaTensao()];
-				}
+			double tempo = c.getPosicao();
+			if(tempo <= serie.getMinX()|| tempo >= serie.getMaxX()){
+				//System.out.println(tempo);
+				return 0.0;
 			}
+			return getTensaoCursorRecursivo(tempo, 0, serie.getItemCount(),20);
 		}
 		return 0.0;
-	}	
+	}
 	
+	public double getTensaoCursorRecursivo(double tempo,int posicaoIni, int posicaoFin,int contador){
+		int  posicao = posicaoIni + (posicaoFin - posicaoIni)/2;
+		if(posicao <= 0 || posicao >= serie.getMaximumItemCount() || 
+				(Double)serie.getX(posicao) <= (Double)serie.getMinX() || 
+				(Double)serie.getX(posicao) > (Double)serie.getMaxX()){
+			return 0.0;
+		}
+		
+		double anteriorY = (Double) serie.getY(posicao-1);
+		double proximoY = (Double) serie.getY(posicao);
+		double anteriorX = (Double) serie.getX(posicao-1);
+		double proximoX = (Double) serie.getX(posicao);
+		
+		if(anteriorX < tempo && proximoX > tempo){
+			double m = (anteriorY-proximoY)/proximoX-proximoY;
+			double b = -m*anteriorX +anteriorY;
+			return (m*tempo+b) * Canal.seriesEscalaTensao[this.getEscalaTensao()];
+		}
+		contador --;
+		if (contador == -1){
+			return 0.0;
+		}
+			
+		if(proximoX>=tempo){
+			return getTensaoCursorRecursivo(tempo, posicaoIni , posicao, contador);
+		}
+		else{
+			return getTensaoCursorRecursivo(tempo, posicao+1, posicaoFin, contador);
+		}
+	}	
 	public int getEscalaTensao(){
 		return escalaTensao;
 	}
@@ -128,7 +157,9 @@ public class Canal {
 	public void select(boolean ativo){
 		this.ativo = ativo;
 	}
-	
+	public XYSeries getSerie(){
+		return serie;
+	}
 	public boolean isEnable(){
 		return ativo;
 	}

@@ -14,13 +14,16 @@ public class GeradorDeFuncoes extends Thread {
 	
 	private boolean status;
 	
-	public static final double frequenciaAmostragem = 1000;
+	private double tensaoRuido; 
+	
+	public static final double frequenciaAmostragem = 100;
 	
 	public GeradorDeFuncoes(){
 		setEstado(GeradorDeFuncoes.SENOIDE);
 		frequencia = 1;
 		amplitude = 0;
 		status = false;
+		tensaoRuido = 0;
 		this.start();
 		
 	}
@@ -84,8 +87,19 @@ public class GeradorDeFuncoes extends Thread {
 	public void setFrequencia(int frequencia) {
 		this.frequencia = frequencia;
 	}
+	public void setRuido (double tensaoRuido){
+		this.tensaoRuido = tensaoRuido;
+	}
 	public double getValor() {
-		return valor;
+		
+		double aleatorio = Math.random();
+		if(aleatorio >0.5)
+		{
+			aleatorio /=2;
+			aleatorio = -aleatorio;
+		}
+		aleatorio *=2;
+		return valor+aleatorio*tensaoRuido;
 	}
 	public void setValor(double valor) {
 		this.valor = valor;
