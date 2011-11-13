@@ -99,32 +99,35 @@ public class Canal {
 	}
 	
 	public double calcFrequencia(){
-			if(serie != null  && !serie.isEmpty()){	
-			    int max = (serie.getItemCount()+ 1) / 2;
-	        	Complex dft[] = new Complex[max];
-	        	for(int k = 0; k < dft.length; k++) {
-		            dft[k] = new Complex(0, 0);
-		            for (int n = 1; n < serie.getItemCount(); n ++) {
-		                double mod = (Double) serie.getY(n);
-		                Complex exp = Complex.exp(0, -(2*k*n*Math.PI) / serie.getItemCount());
-		                dft[k].re += mod * exp.re;
-		                dft[k].im += mod * exp.im;
-		            }
-	        }
-	        	
+		if(serie != null  && !serie.isEmpty()){	
+		    int TamanhoSerie = serie.getItemCount();
+		    int max = (TamanhoSerie+ 1) / 2;
+        	Complex dft[] = new Complex[max];
+        	for(int k = 0; k < dft.length; k++) {
+	            dft[k] = new Complex(0, 0);
+	            int n = 1;
+	            while(n < TamanhoSerie){//Problema com esse loops dentro de outro!
+	            	double var = (Double) serie.getY(n);
+	                Complex exp = Complex.exp(0, -(2*k*n*Math.PI) / TamanhoSerie);
+	                dft[k].re += var * exp.re;
+	                dft[k].im += var * exp.im;
+	                n++;
+	                
+	            }
+        	}
+   
 			double max_2 = dft[0].getModule();
-			int maxi = 0;
+			TamanhoSerie = 0;
 			for (int i = 1; i < dft.length; i ++) {
 				double atu = dft[i].getModule();
 				if (atu > max_2) {
 					max_2 = atu;
-					maxi = i;
+					TamanhoSerie = i;
 				}
 			}
-			//Freq Amostragem = 1000;
-			return (GeradorDeFuncoes.frequenciaAmostragem * maxi) / (2 * dft.length);
-		}
-		return 0.0;
+			return (GeradorDeFuncoes.frequenciaAmostragem * TamanhoSerie) / (2 * dft.length);
+		 }
+			return 0.0;
 	}         
 	  
 	      
