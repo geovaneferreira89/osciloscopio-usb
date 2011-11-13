@@ -16,7 +16,7 @@ public class GeradorDeFuncoes extends Thread {
 	
 	private double tensaoRuido; 
 	
-	public static final double frequenciaAmostragem = 100;
+	public static final double frequenciaAmostragem = 1000;
 	
 	public GeradorDeFuncoes(){
 		setEstado(GeradorDeFuncoes.SENOIDE);
