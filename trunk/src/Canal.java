@@ -1,3 +1,9 @@
+import java.util.Timer;
+import java.util.TimerTask;
+
+import jfreedsp.math.Complex;
+import jfreedsp.math.DSP;
+
 import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 
@@ -23,7 +29,6 @@ public class Canal {
 	
 	private int [] dataComunicacao;
 	private double posTempo;
-	
 	
 	private double tRMS;
 	private int lastRMS;
@@ -68,7 +73,6 @@ public class Canal {
 		this.amplifica = amplifica;
 		this.atenua = atenua;
 	}
-	
 	public double calcTensaoRMS(){
 		if(serie != null && !serie.isEmpty()){
 			double rms = tRMS;
@@ -94,9 +98,30 @@ public class Canal {
 	}
 	
 	public double calcFrequencia(){
+		if(serie != null  && !serie.isEmpty()){
+			double [] amostras = new double[serie.getItemCount()];
+		
+			for(int i=1; i < serie.getItemCount(); i++){
+				amostras[i-1] = (Double) serie.getY(i);
+			}
+			
+			Complex[] dft = DSP.DFT(amostras);
+			double max = dft[0].getModule();
+			int maxi = 0;
+			for (int i = 1; i < dft.length; i ++) {
+				double atu = dft[i].getModule();
+				if (atu > max) {
+					max = atu;
+					maxi = i;
+				}
+			}
+			//Freq Amostragem = 1000;
+			return (1000 * maxi) / (2 * dft.length);
+		}
 		return 0.0;
-	}
-	
+	}         
+	  
+	      
 	public void setSeries(XYSeries serie){
 		this.serie = serie;
 	}
