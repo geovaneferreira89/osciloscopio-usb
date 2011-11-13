@@ -99,20 +99,25 @@ public class Canal {
 	}
 	
 	public double calcFrequencia(){
-		if(serie != null  && !serie.isEmpty()){
-			double [] amostras = new double[serie.getItemCount()];
-		
-			for(int i=1; i < serie.getItemCount(); i++){
-				amostras[i-1] = (Double) serie.getY(i);
-			}
-			
-			Complex[] dft = DSP.DFT(amostras);
-			double max = dft[0].getModule();
+			if(serie != null  && !serie.isEmpty()){	
+			    int max = (serie.getItemCount()+ 1) / 2;
+	        	Complex dft[] = new Complex[max];
+	        	for(int k = 0; k < dft.length; k++) {
+		            dft[k] = new Complex(0, 0);
+		            for (int n = 1; n < serie.getItemCount(); n ++) {
+		                double mod = (Double) serie.getY(n);
+		                Complex exp = Complex.exp(0, -(2*k*n*Math.PI) / serie.getItemCount());
+		                dft[k].re += mod * exp.re;
+		                dft[k].im += mod * exp.im;
+		            }
+	        }
+	        	
+			double max_2 = dft[0].getModule();
 			int maxi = 0;
 			for (int i = 1; i < dft.length; i ++) {
 				double atu = dft[i].getModule();
-				if (atu > max) {
-					max = atu;
+				if (atu > max_2) {
+					max_2 = atu;
 					maxi = i;
 				}
 			}
