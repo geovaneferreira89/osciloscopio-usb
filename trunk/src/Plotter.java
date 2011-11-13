@@ -105,10 +105,10 @@ public class Plotter implements Runnable{
 			for(int i = 0 ; i < microControlador.bufferuC; i++)
 			{
 				dataOld = Double.MAX_VALUE;
-				if(i>1){
-					dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
-				}
-				if(posTempo==0&& controle.getTrigger().isEnable() && controle.getTrigger().getCanal()==ch){
+				if(posTempo==0 && controle.getTrigger().isEnable() && controle.getTrigger().getCanal()==ch){
+					if(i>1){
+						dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
+					}
 					posTrigger = controle.getTrigger().getPosicao(); 
 					posAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
 					if(posAtual>dataOld && posTrigger<=posAtual && posTrigger>=dataOld){
@@ -125,7 +125,7 @@ public class Plotter implements Runnable{
 						
 						posTempo = 0;
 						collection.removeSeries(series[serieAtual]);
-						ch.clearRMS();
+						ch.clear_RMS_FREQ();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
@@ -140,11 +140,10 @@ public class Plotter implements Runnable{
 		else{
 			for(int i = 0 ; i < microControlador.bufferuC; i++){
 				dataOld = Double.MAX_VALUE;
-				if(i>1){
-					dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
-				}
 				if(posTempo==0 && controle.getTrigger().isEnable() && controle.getTrigger().getCanal()==ch){
-					
+					if(i>1){
+						dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
+					}
 					posTrigger = controle.getTrigger().getPosicao(); 
 					posAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
 					if(posAtual>dataOld && posTrigger <= posAtual && posTrigger>=dataOld){
@@ -156,9 +155,9 @@ public class Plotter implements Runnable{
 				else{
 					series[serieAtual].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i])+ch.getOffset());
 					posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
-					if(posTempo >2*rangePlotter){
+					if(posTempo >2*rangePlotter+(1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo]){
 						posTempo = 0;
-						ch.clearRMS();
+						ch.clear_RMS_FREQ();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
 						series[serieAtual].clear();
@@ -177,12 +176,14 @@ public class Plotter implements Runnable{
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH1[i].clear();
 				ch1.setPosTempo(0);
+				ch1.clear_RMS_FREQ();
 			}
 			break;
 		case 2:
 			for(int i = 0 ; i<tamBufferSeries ; i++){
 				seriesCH2[i].clear();
 				ch2.setPosTempo(0);
+				ch2.clear_RMS_FREQ();
 			}
 			break;
 		case 3:
@@ -191,6 +192,8 @@ public class Plotter implements Runnable{
 				seriesCH2[i].clear();
 				ch1.setPosTempo(0);
 				ch2.setPosTempo(0);
+				ch1.clear_RMS_FREQ();
+				ch2.clear_RMS_FREQ();
 			}
 			break;
 		}
