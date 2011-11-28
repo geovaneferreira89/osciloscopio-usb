@@ -31,8 +31,6 @@ public class Canal {
 	private int [] dataComunicacao;
 	private double posTempo;
 	
-	private double tRMS;
-	private int lastRMS;
 	
 	// Informam na matrix seriesEscalaTensao e escalaTensaoStr as posições (index) 
 	// onde ocorrem atenuacao/amp no sinal respectivamente:
@@ -43,7 +41,15 @@ public class Canal {
 	
 	public static boolean changed = false;
 	private boolean changedEsp;
-
+	
+	private double frequencia = 0.0;
+	private int lastFreq;
+	private double pontosTempoCalcFreq[] = new double[3];
+	private int contFreq;
+	private double tRMS;
+	private int lastRMS;
+	
+	private boolean trigFreq;
 	
 	public Canal(int numCanal){
 		dataComunicacao = new int[microControlador.bufferuC];
@@ -61,6 +67,13 @@ public class Canal {
 		
 		tRMS = 0;
 		lastRMS = 0;
+		lastFreq = 0;
+		contFreq = 0;
+		 frequencia = 0.0;
+		for(int i = 0 ; i<3; i++){
+			pontosTempoCalcFreq[i] = -1;
+		}
+		trigFreq = false;
 	}
 	
 	public void setDataComunicacao(int dataComunicacao[]){
@@ -90,6 +103,13 @@ public class Canal {
 	public void clear_RMS_FREQ(){
 		tRMS = 0;
 		lastRMS = 0;
+		
+		lastFreq = 0;
+		contFreq = 0;
+		trigFreq = false;
+		for(int i = 0 ; i<3; i++){
+			pontosTempoCalcFreq[i] = -1;
+		}
 	}
 	public double calcTensaoPP(){
 		if(serie != null && !serie.isEmpty()){
@@ -98,36 +118,33 @@ public class Canal {
 		return 0.0;
 	}
 	
-	public double calcFrequencia(){
-		if(serie != null  && !serie.isEmpty()){	
-		    int TamanhoSerie = serie.getItemCount();
-		    int max = (TamanhoSerie+ 1) / 2;
-        	Complex dft[] = new Complex[max];
-        	for(int k = 0; k < dft.length; k++) {
-	            dft[k] = new Complex(0, 0);
-	            int n = 1;
-	            while(n < TamanhoSerie){//Problema com esse loops dentro de outro!
-	            	double var = (Double) serie.getY(n);
-	                Complex exp = Complex.exp(0, -(2*k*n*Math.PI) / TamanhoSerie);
-	                dft[k].re += var * exp.re;
-	                dft[k].im += var * exp.im;
-	                n++;
-	                
-	            }
-        	}
-   
-			double max_2 = dft[0].getModule();
-			TamanhoSerie = 0;
-			for (int i = 1; i < dft.length; i ++) {
-				double atu = dft[i].getModule();
-				if (atu > max_2) {
-					max_2 = atu;
-					TamanhoSerie = i;
+	public double calcFrequencia(Trigger t){
+		if(t.isEnable() && serie != null && !serie.isEmpty() && t.getCanal()==this){
+			double dataOld;
+			double posTrigger;
+			double dataAtual;
+			for(int i= lastFreq+1; i < serie.getItemCount(); i++){
+			
+				dataOld = (Double) serie.getY(i-1);
+				dataAtual = (Double) serie.getY(i);
+				posTrigger = t.getPosicao(); 
+				
+				if(dataAtual>dataOld && posTrigger<=dataAtual && posTrigger>=dataOld ||dataAtual<dataOld && posTrigger>=dataAtual && posTrigger<=dataOld){
+					trigFreq = true;
 				}
-			}
-			return (GeradorDeFuncoes.frequenciaAmostragem * TamanhoSerie) / (2 * dft.length);
-		 }
-			return 0.0;
+				if(trigFreq && (dataAtual > posTrigger+0.2 || dataAtual < posTrigger-0.2)){
+					pontosTempoCalcFreq[contFreq] = (Double) serie.getX(i);
+					contFreq ++;
+					trigFreq = false;
+				}
+				if(contFreq == 3){
+					frequencia = (pontosTempoCalcFreq[2] - pontosTempoCalcFreq[0])*seriesEscalaTempo[escalaTempo];  
+					contFreq = 0;
+				}
+				lastFreq = serie.getItemCount();
+			}			
+		}
+		return frequencia;
 	}         
 	  
 	      
