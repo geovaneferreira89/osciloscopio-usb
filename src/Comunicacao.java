@@ -1,12 +1,9 @@
-import ch.ntb.usb.*;
-
 public class Comunicacao implements Runnable{
 	
 	public void run() {
 		while(true){
 
 		}
-		
 	}
 	
 	public byte[] read(){
@@ -18,7 +15,6 @@ public class Comunicacao implements Runnable{
 	}
 	
 	public boolean getStatus(){
-		
 		return false;
 	}
 	

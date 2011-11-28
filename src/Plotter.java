@@ -31,7 +31,9 @@ public class Plotter implements Runnable{
 	private int serieAtualCH1;
 	private int serieAtualCH2;
 
-
+	boolean trigPlotCH1;
+	boolean trigPlotCH2;
+	
 	public Plotter(Controle c){
 		controle = c;
 		
@@ -65,6 +67,10 @@ public class Plotter implements Runnable{
         
         serieAtualCH1 = 0;
         serieAtualCH2 = 0;
+        
+        trigPlotCH1 = false;
+        trigPlotCH2 = false;
+        
 	}
 	@Override
 	public void run() {
@@ -82,7 +88,7 @@ public class Plotter implements Runnable{
 				if(controle.getStatusPlotar()){
 					if(!controle.getStop()){
 						if(ch1.isEnable()){
-							atualizaPlotter(1, seriesCH1, serieAtualCH1, ch1.getPosTempo(), ch1);
+							atualizaPlotter(1, seriesCH1, serieAtualCH1, ch1.getPosTempo(), ch1, trigPlotCH1);
 						}
 						controle.getFrameProjeto().getChartPanel().repaint();
 					}
@@ -94,11 +100,10 @@ public class Plotter implements Runnable{
 			}
 		}
 	}
-	public void atualizaPlotter(int numCanal, XYSeries series[], int serieAtual, double posTempo, Canal ch){
+	public void atualizaPlotter(int numCanal, XYSeries series[], int serieAtual, double posTempo, Canal ch, boolean trigPlot){
 		double dataOld;
 		double posTrigger;
-		double posAtual;
-		
+		double dataAtual;
 		ch.setSeries(series[serieAtual]);
 		//Com buffer.
 		if(Canal.escalaTempo<=Canal.realTime){
@@ -110,13 +115,17 @@ public class Plotter implements Runnable{
 						dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
 					}
 					posTrigger = controle.getTrigger().getPosicao(); 
-					posAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
-					if(posAtual>dataOld && posTrigger<=posAtual && posTrigger>=dataOld){
-		
+					dataAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
+					if(dataAtual>dataOld && posTrigger<=dataAtual && posTrigger>=dataOld){
+						trigPlot = true;
+						//series[(serieAtual+tamBufferSeries-1) % tamBufferSeries].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset());
+						//posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
+					}					
+					if(trigPlot && dataAtual > posTrigger+0.2){
+						trigPlot = false;
 						series[(serieAtual+tamBufferSeries-1) % tamBufferSeries].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset());
 						posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
-						
-					}					
+					}
 				}
 				else{
 					series[(serieAtual+tamBufferSeries-1) % tamBufferSeries].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset());
@@ -145,11 +154,17 @@ public class Plotter implements Runnable{
 						dataOld = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i-1]) + ch.getOffset();
 					}
 					posTrigger = controle.getTrigger().getPosicao(); 
-					posAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
-					if(posAtual>dataOld && posTrigger <= posAtual && posTrigger>=dataOld){
-						series[serieAtual].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i])+ch.getOffset());
-						posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
+					dataAtual = Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset();
+					if(dataAtual>dataOld && posTrigger<=dataAtual && posTrigger>=dataOld){
+						trigPlot = true;
+						//series[(serieAtual+tamBufferSeries-1) % tamBufferSeries].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset());
+						//posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
 					}					
+					if(trigPlot && dataAtual > posTrigger+0.2){
+						trigPlot = false;
+						series[(serieAtual) % tamBufferSeries].add(posTempo,Converter.converteDigitalDouble(ch, ch.getDataComunicacao()[i]) + ch.getOffset());
+						posTempo = posTempo + (1/GeradorDeFuncoes.frequenciaAmostragem)/Canal.seriesEscalaTempo[Canal.escalaTempo];
+					}				
 				}
 				
 				else{
@@ -167,7 +182,7 @@ public class Plotter implements Runnable{
 			}
 		}
 		ch.setPosTempo(posTempo);
-		atualizaSerieAtual(numCanal,serieAtual);
+		atualizaSerieAtual(numCanal,serieAtual,trigPlot);
 		
 	}
 	public void clearSeriesBuffers(int numSerie){
@@ -198,13 +213,15 @@ public class Plotter implements Runnable{
 			break;
 		}
 	}
-	public void atualizaSerieAtual(int numCanal, int serieAtual){
+	public void atualizaSerieAtual(int numCanal, int serieAtual, boolean trigPlot){
 		if(numCanal ==1 )
 		{
 			serieAtualCH1 = serieAtual;
+			trigPlotCH1 = trigPlot; 
 		}
 		else{
 			serieAtualCH2 = serieAtual;
+			trigPlotCH2 = trigPlot; 
 		}
 	}
 	public void configDomainMarker(){

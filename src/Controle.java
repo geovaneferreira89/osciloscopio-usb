@@ -51,6 +51,7 @@ public class Controle implements Runnable {
 		g1 = new GeradorDeFuncoes();
 		g1.setAmplitude(10);
 		g1.setFrequencia(1);
+		g1.setRuido(0.3);
 		g1.setEstado(GeradorDeFuncoes.SENOIDE);
 		uc = new microControlador(g1);
 
@@ -109,7 +110,7 @@ public class Controle implements Runnable {
 							uc.setStatus(false);
 							statusPlotar = true;
 						}
-
+						
 						atualizaLabelCursores();
 						atualizaLabelCanais();
 					}
@@ -389,14 +390,13 @@ public class Controle implements Runnable {
 		}
 		frameProjeto.atualizaCursores(s);
 	}
-
 	public void atualizaLabelCanais() {
 		String[] s = { "", "", "", "", "", "", "" };
 		if (ch1.isEnable()) {
 
 			s[0] = Converter.converteUnidadeTensao(ch1.calcTensaoRMS());
 			s[1] = Converter.converteUnidadeTensao(ch1.calcTensaoPP());
-			s[2] = Converter.converteUnidadeFrequencia(ch1.calcFrequencia());
+			s[2] = Converter.converteUnidadeFrequencia(ch1.calcFrequencia(trigger));
 
 		}
 		if (ch2.isEnable()) {
